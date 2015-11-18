@@ -16,7 +16,11 @@ win32:LIBS += odbc32.lib odbccp32.lib winmm.lib Wsock32.lib kernel32.lib user32.
 win32:DEFINES += __WINDOWS_ASIO__ __WINDOWS_MM__
 win32:DEFINES -= UNICODE
 
+
+#NOTE: for the dependencies below to work,
+#this project folder should be in the stk_root/projects
 INCLUDEPATH += ../../include/ ../../src/include/
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -28,7 +32,8 @@ SOURCES += main.cpp\
     ../../src/RtWvOut.cpp \
     ../../src/SineWave.cpp \
     ../../src/Stk.cpp \
-    ../../src/RtAudio.cpp
+    ../../src/RtAudio.cpp \
+    stkdac.cpp
 
 HEADERS  += mainwindow.h \
     ../../src/include/asio.h \
@@ -46,6 +51,7 @@ HEADERS  += mainwindow.h \
     ../../include/RtMidi.h \
     ../../include/RtWvOut.h \
     ../../include/Stk.h \
-    ../../include/SineWave.h
+    ../../include/SineWave.h \
+    stkdac.h
 
 FORMS    += mainwindow.ui

@@ -17,14 +17,40 @@
    <widget class="QPushButton" name="pushButtonSine">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>60</y>
+      <x>80</x>
+      <y>100</y>
       <width>112</width>
       <height>34</height>
      </rect>
     </property>
     <property name="text">
      <string>Launch sine</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStart">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>112</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Synth</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStop">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>170</y>
+      <width>112</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop Synth</string>
     </property>
    </widget>
   </widget>
