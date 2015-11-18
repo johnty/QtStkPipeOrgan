@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QThread>
 #include "SineWave.h"
 #include "RtWvOut.h"
 #include "Stk.h"
@@ -17,6 +18,8 @@ class StkDac : public QObject
     Q_OBJECT
 public:
     explicit StkDac(QObject *parent = 0);
+    void run();
+    void stopDac() { running = false; }
 
 signals:
 

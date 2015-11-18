@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButtonSine_clicked()
 {
 
-    emit toDac(2);
+    my_dac->toggleSine();
     return;
 
     // Set the global sample rate before creating class instances.
@@ -84,18 +84,29 @@ void MainWindow::on_pushButtonStart_clicked()
     my_dac->moveToThread(synth_thread);
 
     //connect slots
+
+    //connect(my_dac, SIGNAL(testFromDac()), this, SLOT(fromDac()));
+
     connect(synth_thread, SIGNAL(started()), my_dac, SLOT(runSynth()));
+
+    //NOTE: the thread cannot finish until the worker is done,
+    // so this call below is useless!!
     connect(synth_thread, SIGNAL(finished()), my_dac, SLOT(stopSynth()));
-    connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
+    connect(this, SIGNAL(toDac(int)), my_dac, SLOT(stopSynth()));
+    //connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
 
     synth_thread->start();
 }
 
 void MainWindow::on_pushButtonStop_clicked()
 {
+    qDebug() <<"trying to stop dac\n";
+    my_dac->stopDac();
+
     qDebug() <<"calling exit on thread...\n";
-    synth_thread->currentThread()->quit();
-    while (!synth_thread->isFinished()) {}
+    synth_thread->exit();
+    synth_thread->wait();
+
     qDebug() <<"thread stopped\n";
 
 

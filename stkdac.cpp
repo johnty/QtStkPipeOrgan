@@ -43,15 +43,12 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
     catch ( RtAudioError& error ) {
         error.printMessage();
     }
-    qDebug() << "Starting RtAudio Stream...\n";
-    dac->startStream();
 
 }
 
 int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
 {
 //    qDebug() <<"tick tock\n";
-
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
@@ -77,8 +74,13 @@ void StkDac::runSynth()
 {
     running = true;
     qDebug() << "dac thread started\n";
+    qDebug() << "Starting RtAudio Stream...\n";
+    dac->startStream();
+
+    unsigned int i=0;
     while (running)
     {
+
         try {
 
         }
