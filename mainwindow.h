@@ -27,6 +27,7 @@ private slots:
 
 signals:
     void stopSignal();
+    void toDac(int val);
 
 private:
     Ui::MainWindow *ui;

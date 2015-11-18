@@ -2,6 +2,8 @@
 #include <QDebug>
 
 SineWave *sine_test;
+SineWave *sine2_test;
+bool isSine;
 
 StkDac::StkDac(QObject *parent) : QObject(parent)
 {
@@ -15,6 +17,9 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
     //sine test
     sine_test = new SineWave();
     sine_test->setFrequency(440.0);
+    sine2_test = new SineWave();
+    sine2_test->setFrequency(660.0);
+    isSine = true;
 
     dac = NULL;
 
@@ -51,9 +56,19 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
         StkFloat val = sine_test->tick();
-        samples[2*i]=val;
-        samples[2*i+1] = val;
-        //*samples++ = sine_test->tick();
+        StkFloat val2 = sine2_test->tick();
+        if (isSine)
+        {
+            samples[2*i]=val;
+            samples[2*i+1] = val2;
+            //*samples++ = sine_test->tick();
+        }
+        else
+        {
+            samples[2*i]=0.0;
+            samples[2*i+1]=0.0;
+        }
+
     }
     return 0;
 }
@@ -77,4 +92,9 @@ void StkDac::runSynth()
         delete audio_data;
     if (sine_test)
         delete sine_test;
+}
+
+void StkDac::toggleSine()
+{
+    isSine = !isSine;
 }

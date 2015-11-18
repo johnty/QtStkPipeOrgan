@@ -2,6 +2,7 @@
 #define STKDAC_H
 
 #include <QObject>
+#include <QDebug>
 #include "SineWave.h"
 #include "RtWvOut.h"
 #include "Stk.h"
@@ -21,7 +22,11 @@ signals:
 
 public slots:
     void runSynth();
-    void stopSynth() { running = false; }
+    void stopSynth() {
+        qDebug() << "stop called\n";
+        running = false;
+    }
+    void toggleSine();
 
 private:
 

@@ -29,6 +29,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButtonSine_clicked()
 {
 
+    emit toDac(2);
     return;
 
     // Set the global sample rate before creating class instances.
@@ -85,6 +86,7 @@ void MainWindow::on_pushButtonStart_clicked()
     //connect slots
     connect(synth_thread, SIGNAL(started()), my_dac, SLOT(runSynth()));
     connect(synth_thread, SIGNAL(finished()), my_dac, SLOT(stopSynth()));
+    connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
 
     synth_thread->start();
 }
