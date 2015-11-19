@@ -3,6 +3,12 @@
 
 SineWave *sine_test;
 SineWave *sine2_test;
+
+#define NUM_SINES 512
+
+SineWave *sines[NUM_SINES];
+StkFloat norm = (float)0.5/NUM_SINES;
+
 bool isSine;
 
 StkDac::StkDac(QObject *parent) : QObject(parent)
@@ -19,7 +25,20 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
     sine_test->setFrequency(440.0);
     sine2_test = new SineWave();
     sine2_test->setFrequency(660.0);
-    isSine = true;
+    isSine = true;\
+
+    qDebug() <<"norm = " << norm <<"\n";
+
+    for (int i=0; i<NUM_SINES; i++)
+    {
+        sines[i] = new SineWave();
+
+        float freq = 440.0*pow(2.0, (double)(i%12)/12.0);
+
+
+        sines[i]->setFrequency(freq);
+        //qDebug() << "freq " <<i<<" = " << freq<<"\n";
+    }
 
     dac = NULL;
 
@@ -52,11 +71,24 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        StkFloat val = sine_test->tick();
+        samples[2*i] = 0.0;
+        samples[2*i+1] = 0.0;
+        StkFloat val;
+
+        for (int j=0; j<NUM_SINES; j++)
+        {
+            val = sines[j]->tick();
+            samples[2*i]+=val*norm;
+            samples[2*i+1] += val*norm;
+        }
+
+        /*
+        StkFloat val1 = sine_test->tick();
         StkFloat val2 = sine2_test->tick();
+
         if (isSine)
         {
-            samples[2*i]=val;
+            samples[2*i]=val1;
             samples[2*i+1] = val2;
             //*samples++ = sine_test->tick();
         }
@@ -65,6 +97,7 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
             samples[2*i]=0.0;
             samples[2*i+1]=0.0;
         }
+        */
 
     }
     return 0;

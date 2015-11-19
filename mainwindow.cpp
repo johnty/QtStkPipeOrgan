@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    stopDacProc();
     delete ui;
 }
 
@@ -100,14 +101,17 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_pushButtonStop_clicked()
 {
-    qDebug() <<"trying to stop dac\n";
-    my_dac->stopDac();
+    stopDacProc();
 
+
+}
+
+void MainWindow::stopDacProc()
+{
+    qDebug() <<"stopping dac worker\n";
+    my_dac->stopDac();
     qDebug() <<"calling exit on thread...\n";
     synth_thread->exit();
     synth_thread->wait();
-
-    qDebug() <<"thread stopped\n";
-
-
+    qDebug() <<"threads exited cleanly.\n";
 }

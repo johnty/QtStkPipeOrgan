@@ -32,6 +32,9 @@ signals:
     void toDac(int val);
 
 private:
+
+    void stopDacProc();
+
     Ui::MainWindow *ui;
     StkDac *my_dac;
     QThread* synth_thread;
