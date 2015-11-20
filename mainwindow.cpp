@@ -43,7 +43,7 @@ void MainWindow::on_pushButtonStart_clicked()
         delete my_dac;
     my_dac = 0;
 
-    my_dac = new StkDac();
+    my_dac = new OrganSynth();
     my_dac->moveToThread(synth_thread);
 
     //connect slots

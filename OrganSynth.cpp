@@ -12,7 +12,7 @@ StkFloat norm = (float)0.5/NUM_SINES;
 
 bool isSine;
 
-StkDac::StkDac(QObject *parent) : QObject(parent)
+OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
 {
     // Set the global sample rate before creating class instances.
     Stk::setSampleRate( 44100.0 );
@@ -77,9 +77,30 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
         error.printMessage();
     }
 
+    //Make MIDI port
+    midi_in = new RtMidiIn();
+    // Check available ports.
+    unsigned int nPorts = midi_in->getPortCount();
+    if ( nPorts == 0 ) {
+        std::cout << "No ports available!\n";
+
+    }
+    midi_in->openVirtualPort("OrganSynth");
+    // Don't ignore sysex, timing, or active sensing messages.
+    midi_in->ignoreTypes( false, false, false );
+
 }
 
-int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
+OrganSynth::~OrganSynth()
+{
+    if (midi_in)
+    {
+        midi_in->closePort();
+        delete midi_in;
+    }
+}
+
+int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
 {
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
@@ -102,18 +123,33 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
     return 0;
 }
 
-void StkDac::runSynth()
+void OrganSynth::runSynth()
 {
     running = true;
     qDebug() << "dac thread started\n";
     qDebug() << "Starting RtAudio Stream...\n";
     dac->startStream();
 
-    unsigned int i=0;
+
+    //MIDI data
+    std::vector<unsigned char> message;
+    int nBytes, i;
+    double stamp;
+
     while (running)
     {
 
         try {
+
+            //read MIDI in
+
+            stamp = midi_in->getMessage( &message );
+            nBytes = message.size();
+            for ( i=0; i<nBytes; i++ )
+                qDebug() << "Byte " << i << " = " << (int)message[i] << ", ";
+            if ( nBytes > 0 )
+                qDebug() << "stamp = " << stamp << "\n";
+
         }
         catch ( StkError & ) {
         }
@@ -125,9 +161,10 @@ void StkDac::runSynth()
         delete audio_data;
     if (sine_test)
         delete sine_test;
+
 }
 
-void StkDac::toggleSound()
+void OrganSynth::toggleSound()
 {
     isSine = !isSine;
 }

@@ -37,6 +37,7 @@ HEADERS +=     ../../src/include/asio.h \
 
 macx:DEFINES += __MACOSX_CORE__
 macx:LIBS += -framework CoreAudio
+macx:LIBS += -framework CoreMIDI
 macx:LIBS += -framework CoreFoundation
 
 
@@ -52,6 +53,7 @@ SOURCES += main.cpp\
     ../../src/SineWave.cpp \
     ../../src/Stk.cpp \
     ../../src/RtAudio.cpp \
+    ../../src/RtMidi.cpp \
     OrganSynth.cpp
 
 HEADERS  += mainwindow.h \

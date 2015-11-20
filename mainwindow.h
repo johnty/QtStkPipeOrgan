@@ -36,7 +36,7 @@ private:
     void stopDacProc();
 
     Ui::MainWindow *ui;
-    StkDac *my_dac;
+    OrganSynth *my_dac;
     QThread* synth_thread;
 };
 

@@ -1,5 +1,5 @@
-#ifndef STKDAC_H
-#define STKDAC_H
+#ifndef OrganSynth_H
+#define OrganSynth_H
 
 #include <QObject>
 #include <QDebug>
@@ -9,15 +9,17 @@
 #include "Stk.h"
 #include "OrganSynth.h"
 #include "RtAudio.h"
+#include "RtMidi.h"
 
 
 using namespace stk;
 
-class StkDac : public QObject
+class OrganSynth : public QObject
 {
     Q_OBJECT
 public:
-    explicit StkDac(QObject *parent = 0);
+    explicit OrganSynth(QObject *parent = 0);
+    ~OrganSynth();
     void run();
     void stopDac() { running = false; }
 
@@ -37,8 +39,9 @@ private:
               double streamTime, RtAudioStreamStatus status, void *dataPointer );
 
     RtAudio *dac;
+    RtMidiIn *midi_in;
     StkFrames *audio_data;
     bool running;
 };
 
-#endif // STKDAC_H
+#endif // OrganSynth_H
