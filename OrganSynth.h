@@ -29,7 +29,7 @@ public slots:
         qDebug() << "stop called\n";
         running = false;
     }
-    void toggleSine();
+    void toggleSound();
 
 private:
 

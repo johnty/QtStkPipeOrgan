@@ -81,7 +81,6 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
 
 int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
 {
-//    qDebug() <<"tick tock\n";
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
@@ -115,13 +114,12 @@ void StkDac::runSynth()
     {
 
         try {
-
         }
         catch ( StkError & ) {
-
         }
     }
     dac->stopStream();
+    dac->closeStream();
     qDebug() << " run stopped\n";
     if (audio_data)
         delete audio_data;
@@ -129,7 +127,7 @@ void StkDac::runSynth()
         delete sine_test;
 }
 
-void StkDac::toggleSine()
+void StkDac::toggleSound()
 {
     isSine = !isSine;
 }
