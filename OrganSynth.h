@@ -7,7 +7,7 @@
 #include "SineWave.h"
 #include "RtWvOut.h"
 #include "Stk.h"
-#include "StkDac.h"
+#include "OrganSynth.h"
 #include "RtAudio.h"
 
 

@@ -4,7 +4,7 @@
 
 #include "SineWave.h"
 #include "RtWvOut.h"
-#include "StkDac.h"
+#include "OrganSynth.h"
 
 #include <cstdlib>
 #include <QDebug>

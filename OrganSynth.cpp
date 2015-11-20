@@ -1,11 +1,11 @@
-#include "stkdac.h"
+#include "OrganSynth.h"
 #include <QDebug>
 #include <math.h>
 
 SineWave *sine_test;
 SineWave *sine2_test;
 
-#define NUM_SINES 1
+#define NUM_SINES 512
 
 SineWave *sines[NUM_SINES];
 StkFloat norm = (float)0.5/NUM_SINES;
@@ -85,22 +85,20 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        StkFloat val1 = sine_test->tick();
-        StkFloat val2 = sine2_test->tick();
-
+        samples[2*i] = 0.0;
+        samples[2*i+1] = 0.0;
         if (isSine)
         {
-            samples[2*i]=val1;
-            samples[2*i+1] = val2;
-            //*samples++ = sine_test->tick();
-        }
-        else
-        {
-            samples[2*i]=0.0;
-            samples[2*i+1]=0.0;
-        }
 
+            StkFloat val;
 
+            for (int j=0; j<NUM_SINES; j++)
+            {
+                val = sines[j]->tick();
+                samples[2*i]+=val*norm;
+                samples[2*i+1] += val*norm;
+            }
+        }
     }
     return 0;
 }

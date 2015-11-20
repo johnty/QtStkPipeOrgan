@@ -52,7 +52,7 @@ SOURCES += main.cpp\
     ../../src/SineWave.cpp \
     ../../src/Stk.cpp \
     ../../src/RtAudio.cpp \
-    stkdac.cpp
+    OrganSynth.cpp
 
 HEADERS  += mainwindow.h \
     ../../include/Mutex.h \
@@ -60,6 +60,6 @@ HEADERS  += mainwindow.h \
     ../../include/RtWvOut.h \
     ../../include/Stk.h \
     ../../include/SineWave.h \
-    stkdac.h
+    OrganSynth.h
 
 FORMS    += mainwindow.ui

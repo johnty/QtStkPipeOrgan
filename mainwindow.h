@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QThread>
-#include "stkdac.h"
+#include "OrganSynth.h"
 
 
 namespace Ui {
