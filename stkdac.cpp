@@ -5,7 +5,7 @@
 SineWave *sine_test;
 SineWave *sine2_test;
 
-#define NUM_SINES 512
+#define NUM_SINES 1
 
 SineWave *sines[NUM_SINES];
 StkFloat norm = (float)0.5/NUM_SINES;
@@ -85,18 +85,6 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
     register StkFloat *samples = (StkFloat*) outputBuffer;
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        samples[2*i] = 0.0;
-        samples[2*i+1] = 0.0;
-        StkFloat val;
-
-        for (int j=0; j<NUM_SINES; j++)
-        {
-            val = sines[j]->tick();
-            samples[2*i]+=val*norm;
-            samples[2*i+1] += val*norm;
-        }
-
-        /*
         StkFloat val1 = sine_test->tick();
         StkFloat val2 = sine2_test->tick();
 
@@ -111,7 +99,7 @@ int StkDac::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFram
             samples[2*i]=0.0;
             samples[2*i+1]=0.0;
         }
-        */
+
 
     }
     return 0;
