@@ -1,5 +1,6 @@
 #include "stkdac.h"
 #include <QDebug>
+#include <math.h>
 
 SineWave *sine_test;
 SineWave *sine2_test;
@@ -44,8 +45,21 @@ StkDac::StkDac(QObject *parent) : QObject(parent)
 
     try {
         // Define and open the default realtime output device for one-channel playback
+#if (defined(__OS_WIN32__))
         dac = new RtAudio();
+#endif
+#if (defined(__OS_MACOSX__))
+        dac = new RtAudio(RtAudio::MACOSX_CORE);
+#endif
+
+#if defined(__MACOSX_CORE___)
+        adddd;
+#endif
+
+        qDebug() << "numDevs = " << dac->getDeviceCount();
     }
+
+
     catch ( RtAudioError & ) {
         exit( 1 );
     }
