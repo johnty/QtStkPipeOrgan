@@ -28,7 +28,7 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
     sine2_test->setFrequency(660.0);
     isSine = true;\
 
-    qDebug() <<"norm = " << norm <<"\n";
+    qDebug() <<"norm = " << norm <<"num sines = " << NUM_SINES << "\n";
 
     for (int i=0; i<NUM_SINES; i++)
     {
@@ -84,14 +84,24 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
     midi_in = new RtMidiIn();
     // Check available ports.
     unsigned int nPorts = midi_in->getPortCount();
-    if ( nPorts == 0 ) {
+    if ( nPorts == 0 )
+    {
         std::cout << "No ports available!\n";
+        delete midi_in;
+        midi_in = NULL;
 
     }
-    midi_in->openVirtualPort("OrganSynth");
-    // Don't ignore sysex, timing, or active sensing messages.
-    midi_in->ignoreTypes( false, false, false );
-
+    else
+    {
+#if (defined(__OS_WIN32__))
+        //expect a loopMidi/virtual port, index 0 (name optional)
+        midi_in->openPort(0, "SynthOrganIn");
+#else
+        midi_in->openVirtualPort("OrganSynth");
+#endif
+        // Don't ignore sysex, timing, or active sensing messages.
+        midi_in->ignoreTypes( false, false, false );
+    }
 }
 
 OrganSynth::~OrganSynth()
@@ -145,13 +155,15 @@ void OrganSynth::runSynth()
         try {
 
             //read MIDI in
-
+            if (midi_in)
+            {
             stamp = midi_in->getMessage( &message );
             nBytes = message.size();
             for ( i=0; i<nBytes; i++ )
                 qDebug() << "Byte " << i << " = " << (int)message[i] << ", ";
             if ( nBytes > 0 )
                 qDebug() << "stamp = " << stamp << "\n";
+            }
 
         }
         catch ( StkError & ) {
