@@ -51,6 +51,9 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
 #if (defined(__OS_MACOSX__))
         dac = new RtAudio(RtAudio::MACOSX_CORE);
 #endif
+#if (defined(__OS_LINUX__))
+        dac = new RtAudio(RtAudio::LINUX_ALSA);
+#endif
 
 #if defined(__MACOSX_CORE___)
         adddd;

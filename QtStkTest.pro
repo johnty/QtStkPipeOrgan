@@ -40,6 +40,8 @@ macx:LIBS += -framework CoreAudio
 macx:LIBS += -framework CoreMIDI
 macx:LIBS += -framework CoreFoundation
 
+unix:!macx:DEFINES += __OS_LINUX__ __LINUX_ALSA__
+unix:!macx:LIBS += -lpthread -lasound
 
 #NOTE: for the dependencies below to work,
 #this project folder should be in the stk_root/projects
