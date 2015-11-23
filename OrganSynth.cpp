@@ -93,11 +93,16 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
     }
     else
     {
+        for (int i=0; i<midi_in->getPortCount(); i++)
+        {
+            qDebug() << "port"<<i<<":"<< midi_in->getPortName().c_str();
+        }
+
 #if (defined(__OS_WIN32__))
         //expect a loopMidi/virtual port, index 0 (name optional)
-        midi_in->openPort(0, "SynthOrganIn");
+        midi_in->openPort(0, "OrganSynthIn");
 #else
-        midi_in->openVirtualPort("OrganSynth");
+        midi_in->openVirtualPort("OrganSynthIn");
 #endif
         // Don't ignore sysex, timing, or active sensing messages.
         midi_in->ignoreTypes( false, false, false );
@@ -157,12 +162,12 @@ void OrganSynth::runSynth()
             //read MIDI in
             if (midi_in)
             {
-            stamp = midi_in->getMessage( &message );
-            nBytes = message.size();
-            for ( i=0; i<nBytes; i++ )
-                qDebug() << "Byte " << i << " = " << (int)message[i] << ", ";
-            if ( nBytes > 0 )
-                qDebug() << "stamp = " << stamp << "\n";
+                stamp = midi_in->getMessage( &message );
+                nBytes = message.size();
+                for ( i=0; i<nBytes; i++ )
+                    qDebug() << "Byte " << i << " = " << (int)message[i] << ", ";
+                if ( nBytes > 0 )
+                    qDebug() << "stamp = " << stamp << "\n";
             }
 
         }
