@@ -37,16 +37,26 @@ void MainWindow::on_pushButtonSine_clicked()
 
 void MainWindow::on_pushButtonStart_clicked()
 {
+    if (my_organsynth) //stop if running
+        stopDacProc();
+
     if (synth_thread)
         delete synth_thread;
     synth_thread = 0;
     synth_thread = new QThread;
 
     if (my_organsynth) //TODO get rid of this
+    {
         delete my_organsynth;
-    my_organsynth = 0;
+        my_organsynth = 0;
+    }
 
-    my_organsynth = new OrganSynth();
+
+
+    int port_index = ui->comboBoxMidiIn->currentIndex();
+    if (port_index < 0) //in case something weird happened...
+        port_index = 0;
+    my_organsynth = new OrganSynth(0, port_index);
     my_organsynth->moveToThread(synth_thread);
 
     //connect slots
@@ -85,6 +95,8 @@ void MainWindow::stopDacProc()
 
 void MainWindow::refreshMidi()
 {
+    int prevIndex = ui->comboBoxMidiIn->currentIndex();
+    qDebug()<<"prevIndex = " << prevIndex;
     ui->comboBoxMidiIn->clear();
     RtMidiIn midiin;
     for (int i=0; i<midiin.getPortCount(); i++)
@@ -93,9 +105,12 @@ void MainWindow::refreshMidi()
     }
     if (midiin.getPortCount()==0)
         ui->comboBoxMidiIn->addItem("N/A");
+
+    if (prevIndex != -1) //restore previous selection, if it exists
+        ui->comboBoxMidiIn->setCurrentIndex(prevIndex);
 }
 
 void MainWindow::on_pushButtonRefreshMidi_clicked()
 {
-
+    refreshMidi();
 }

@@ -23,7 +23,7 @@ class OrganSynth : public QObject
 {
     Q_OBJECT
 public:
-    explicit OrganSynth(QObject *parent = 0);
+    explicit OrganSynth(QObject *parent = 0, int midi_in_idx = 0);
     ~OrganSynth();
     void run();
     void stopDac() { running = false; }

@@ -15,8 +15,10 @@ float testFreq = 440.0;
 
 bool isSine;
 
-OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
+OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
 {
+
+    qDebug()<< "launching synth with midi input " << midi_in_idx;
     // Set the global sample rate before creating class instances.
     Stk::setSampleRate( 44100.0 );
     Stk::showWarnings( true );
@@ -96,9 +98,12 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
 
 #if (defined(__OS_WIN32__))
         //expect a loopMidi/virtual port, index 0 (name optional)
-        midi_in->openPort(0, "OrganSynthIn");
+        midi_in->openPort(midi_in_idx, "OrganSynthIn");
 #else
-        midi_in->openVirtualPort("OrganSynthIn");
+        //linux/mac have option to open virtal port:
+        //midi_in->openVirtualPort("OrganSynthIn");
+
+        midi_in->openPort(midi_in_idx, "OrganSynthIn");
 #endif
         // Don't ignore sysex, timing, or active sensing messages.
         midi_in->ignoreTypes( false, false, false );
