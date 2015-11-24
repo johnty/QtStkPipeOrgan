@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QThread>
 #include "OrganSynth.h"
+#include "RtMidi.h"
 
 
 namespace Ui {
@@ -27,6 +28,8 @@ private slots:
 
     void on_pushButtonStop_clicked();
 
+    void on_pushButtonRefreshMidi_clicked();
+
 signals:
     void stopSignal();
     void toDac(int val);
@@ -35,8 +38,10 @@ private:
 
     void stopDacProc();
 
+    void refreshMidi();
+
     Ui::MainWindow *ui;
-    OrganSynth *my_dac;
+    OrganSynth *my_organsynth;
     QThread* synth_thread;
 };
 

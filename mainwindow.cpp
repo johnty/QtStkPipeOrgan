@@ -15,9 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    my_dac = NULL;
+    my_organsynth = NULL;
     synth_thread = NULL;
     ui->setupUi(this);
+
+
+    refreshMidi();
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButtonSine_clicked()
 {
-    my_dac->toggleSound();
+    my_organsynth->toggleSound();
     return;
 }
 
@@ -39,23 +42,23 @@ void MainWindow::on_pushButtonStart_clicked()
     synth_thread = 0;
     synth_thread = new QThread;
 
-    if (my_dac)
-        delete my_dac;
-    my_dac = 0;
+    if (my_organsynth) //TODO get rid of this
+        delete my_organsynth;
+    my_organsynth = 0;
 
-    my_dac = new OrganSynth();
-    my_dac->moveToThread(synth_thread);
+    my_organsynth = new OrganSynth();
+    my_organsynth->moveToThread(synth_thread);
 
     //connect slots
 
     //connect(my_dac, SIGNAL(testFromDac()), this, SLOT(fromDac()));
 
-    connect(synth_thread, SIGNAL(started()), my_dac, SLOT(runSynth()));
+    connect(synth_thread, SIGNAL(started()), my_organsynth, SLOT(runSynth()));
 
     //NOTE: the thread cannot finish until the worker is done,
     // so this call below is useless!!
-    connect(synth_thread, SIGNAL(finished()), my_dac, SLOT(stopSynth()));
-    connect(this, SIGNAL(toDac(int)), my_dac, SLOT(stopSynth()));
+    connect(synth_thread, SIGNAL(finished()), my_organsynth, SLOT(stopSynth()));
+    connect(this, SIGNAL(toDac(int)), my_organsynth, SLOT(stopSynth()));
     //connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
 
     synth_thread->start();
@@ -69,10 +72,30 @@ void MainWindow::on_pushButtonStop_clicked()
 
 void MainWindow::stopDacProc()
 {
-    qDebug() <<"stopping dac worker\n";
-    my_dac->stopDac();
-    qDebug() <<"calling exit on thread...\n";
-    synth_thread->exit();
-    synth_thread->wait();
-    qDebug() <<"threads exited cleanly.\n";
+    if (my_organsynth)
+    {
+        qDebug() <<"stopping dac worker\n";
+        my_organsynth->stopDac();
+        qDebug() <<"calling exit on thread...\n";
+        synth_thread->exit();
+        synth_thread->wait();
+        qDebug() <<"threads exited cleanly.\n";
+    }
+}
+
+void MainWindow::refreshMidi()
+{
+    ui->comboBoxMidiIn->clear();
+    RtMidiIn midiin;
+    for (int i=0; i<midiin.getPortCount(); i++)
+    {
+        ui->comboBoxMidiIn->addItem(midiin.getPortName(i).c_str());
+    }
+    if (midiin.getPortCount()==0)
+        ui->comboBoxMidiIn->addItem("N/A");
+}
+
+void MainWindow::on_pushButtonRefreshMidi_clicked()
+{
+
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>827</width>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,13 +53,49 @@
      <string>Stop Synth</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="comboBoxMidiIn">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelMidiInput">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>80</y>
+      <width>91</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Midi Input</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRefreshMidi">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>100</y>
+      <width>112</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>refresh</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>827</width>
      <height>31</height>
     </rect>
    </property>
