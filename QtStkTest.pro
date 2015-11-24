@@ -50,20 +50,39 @@ INCLUDEPATH += ../../include/ ../../src/include/
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+    ../../src/ADSR.cpp \
+    ../../src/DelayL.cpp \
+    ../../src/Flute.cpp \
     ../../src/Mutex.cpp \
+    ../../src/Noise.cpp \
+    ../../src/OnePole.cpp \
+    ../../src/PoleZero.cpp \
     ../../src/RtWvOut.cpp \
     ../../src/SineWave.cpp \
     ../../src/Stk.cpp \
     ../../src/RtAudio.cpp \
     ../../src/RtMidi.cpp \
-    OrganSynth.cpp
+    ../../src/Voicer.cpp \
+    OrganSynth.cpp \
+    OrganFlue.cpp \
+    OrganRank.cpp
 
 HEADERS  += mainwindow.h \
+    ../../include/ADSR.h \
+    ../../include/DelayL.h \
+    ../../include/Flute.h \
+    ../../include/Instrmnt.h \
     ../../include/Mutex.h \
+    ../../include/Noise.h \
+    ../../include/PoleZero.h \
+    ../../include/OnePole.h \
     ../../include/RtMidi.h \
     ../../include/RtWvOut.h \
     ../../include/Stk.h \
     ../../include/SineWave.h \
-    OrganSynth.h
+    ../../include/Voicer.h \    
+    OrganSynth.h \
+    OrganFlue.h \
+    OrganRank.h
 
 FORMS    += mainwindow.ui

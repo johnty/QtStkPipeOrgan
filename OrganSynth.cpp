@@ -5,10 +5,13 @@
 SineWave *sine_test;
 SineWave *sine2_test;
 
-#define NUM_SINES 512
+#define NUM_SINES 32
+#define testSine FALSE
 
 SineWave *sines[NUM_SINES];
 StkFloat norm = (float)0.5/NUM_SINES;
+
+float testFreq = 440.0;
 
 bool isSine;
 
@@ -22,11 +25,6 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
     audio_data = new StkFrames(512,1);
 
     //sine test
-    sine_test = new SineWave();
-    sine_test->setFrequency(440.0);
-    sine2_test = new SineWave();
-    sine2_test->setFrequency(660.0);
-    isSine = true;\
 
     qDebug() <<"norm = " << norm <<"num sines = " << NUM_SINES << "\n";
 
@@ -34,9 +32,7 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
     {
         sines[i] = new SineWave();
 
-        float freq = 440.0*pow(2.0, (double)(i%12)/12.0);
-
-
+        float freq = testFreq*pow(2.0, (double)(i%12)/12.0);
         sines[i]->setFrequency(freq);
         //qDebug() << "freq " <<i<<" = " << freq<<"\n";
     }
@@ -107,6 +103,7 @@ OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
         // Don't ignore sysex, timing, or active sensing messages.
         midi_in->ignoreTypes( false, false, false );
     }
+
 }
 
 OrganSynth::~OrganSynth()
@@ -132,6 +129,8 @@ int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBuffer
 
             for (int j=0; j<NUM_SINES; j++)
             {
+                //sines[j]->setFrequency(testFreq*pow(2.0, (double)(i%12)/12.0));
+                sines[j]->setFrequency(testFreq);
                 val = sines[j]->tick();
                 samples[2*i]+=val*norm;
                 samples[2*i+1] += val*norm;
@@ -168,6 +167,22 @@ void OrganSynth::runSynth()
                     qDebug() << "Byte " << i << " = " << (int)message[i] << ", ";
                 if ( nBytes > 0 )
                     qDebug() << "stamp = " << stamp << "\n";
+                if (nBytes == 3) //possibly a note on
+                {
+                    int val = message[0]>>4 ;
+                    qDebug()<< "m>>4 = " << val <<"\n";
+                    //1000 nnnn = note off (nnnn = channel #, 0 indexed)
+                    //1001 nnnn = note on
+                    if ((message[0]>>4 == 9)) //note on
+                        isSine = true;
+                    if ((message[0]>>4 == 8)) //note off
+                        isSine = false;
+                    int note = message[1];
+                    testFreq = 440.0 * pow(2.0, (note-69)/12.0);
+
+                }
+
+
             }
 
         }
@@ -181,6 +196,12 @@ void OrganSynth::runSynth()
         delete audio_data;
     if (sine_test)
         delete sine_test;
+
+    for (int i=0; i<NUM_SINES; i++)
+    {
+        delete sines[i];
+        sines[i] = NULL;
+    }
 
 }
 

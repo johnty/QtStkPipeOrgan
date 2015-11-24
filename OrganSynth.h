@@ -11,6 +11,11 @@
 #include "RtAudio.h"
 #include "RtMidi.h"
 
+#include "Instrmnt.h"
+#include "Voicer.h"
+
+#include "OrganRank.h"
+
 
 using namespace stk;
 
@@ -42,6 +47,8 @@ private:
     RtMidiIn *midi_in;
     StkFrames *audio_data;
     bool running;
+    Voicer *voicer;
+
 };
 
 #endif // OrganSynth_H
