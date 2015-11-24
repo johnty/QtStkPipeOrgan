@@ -153,6 +153,8 @@ void OrganSynth::runSynth()
     int nBytes, i;
     double stamp;
 
+    int noteStack = 0;
+
     while (running)
     {
 
@@ -173,12 +175,20 @@ void OrganSynth::runSynth()
                     qDebug()<< "m>>4 = " << val <<"\n";
                     //1000 nnnn = note off (nnnn = channel #, 0 indexed)
                     //1001 nnnn = note on
-                    if ((message[0]>>4 == 9)) //note on
-                        isSine = true;
-                    if ((message[0]>>4 == 8)) //note off
-                        isSine = false;
                     int note = message[1];
-                    testFreq = 440.0 * pow(2.0, (note-69)/12.0);
+                    if ((message[0]>>4 == 9)) //note on
+                    {
+                        noteStack++;
+                        testFreq = 440.0 * pow(2.0, (note-69)/12.0);
+                    }
+                    if ((message[0]>>4 == 8)) //note off
+                        noteStack--;
+
+
+                    if (noteStack>=1)
+                        isSine = true;
+                    else
+                        isSine = false;
 
                 }
 
