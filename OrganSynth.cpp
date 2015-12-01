@@ -11,6 +11,9 @@ SineWave *sine2_test;
 SineWave *sines[NUM_SINES];
 StkFloat norm = (float)0.5/NUM_SINES;
 
+static StkFrames audio_data;
+static OrganRank rank0;
+
 float testFreq = 440.0;
 
 bool isSine;
@@ -24,7 +27,7 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
     Stk::showWarnings( true );
     qDebug() << Stk::sampleRate();
 
-    audio_data = new StkFrames(512,1);
+    audio_data.resize(512);
 
     //sine test
 
@@ -123,24 +126,27 @@ OrganSynth::~OrganSynth()
 int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
 {
     register StkFloat *samples = (StkFloat*) outputBuffer;
+    rank0.tick(audio_data);
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        samples[2*i] = 0.0;
-        samples[2*i+1] = 0.0;
-        if (isSine)
-        {
+        samples[2*i] = audio_data[i];
+        samples[2*i+1] = audio_data[i];
+        //        samples[2*i] = 0.0;
+        //        samples[2*i+1] = 0.0;
+        //        if (isSine)
+        //        {
 
-            StkFloat val;
+        //            StkFloat val;
 
-            for (int j=0; j<NUM_SINES; j++)
-            {
-                //sines[j]->setFrequency(testFreq*pow(2.0, (double)(i%12)/12.0));
-                sines[j]->setFrequency(testFreq);
-                val = sines[j]->tick();
-                samples[2*i]+=val*norm;
-                samples[2*i+1] += val*norm;
-            }
-        }
+        //            for (int j=0; j<NUM_SINES; j++)
+        //            {
+        //                //sines[j]->setFrequency(testFreq*pow(2.0, (double)(i%12)/12.0));
+        //                sines[j]->setFrequency(testFreq);
+        //                val = sines[j]->tick();
+        //                samples[2*i]+=val*norm;
+        //                samples[2*i+1] += val*norm;
+        //            }
+        //        }
     }
     return 0;
 }
@@ -159,6 +165,15 @@ void OrganSynth::runSynth()
     double stamp;
 
     int noteStack = 0;
+
+    int poly = 4;
+    OrganFlue* fluePipes[poly];
+    for (int i=0; i<poly; i++)
+    {
+        fluePipes[i] = new OrganFlue();
+        rank0.addInstrument(fluePipes[i]);
+    }
+
 
     while (running)
     {
@@ -185,9 +200,16 @@ void OrganSynth::runSynth()
                     {
                         noteStack++;
                         testFreq = 440.0 * pow(2.0, (note-69)/12.0);
+
+                        rank0.noteOn(note, 1.0, 0);
+
                     }
                     if ((message[0]>>4 == 8)) //note off
+                    {
                         noteStack--;
+
+                        rank0.noteOff(note, 1.0, 0);
+                    }
 
 
                     if (noteStack>=1)
@@ -204,11 +226,20 @@ void OrganSynth::runSynth()
         catch ( StkError & ) {
         }
     }
+
+    //deallocate voices
+
+    for (int i=0; i<poly; i++)
+    {
+        rank0.removeInstrument(fluePipes[i]);
+        delete fluePipes[i];
+    }
+
+
+
     dac->stopStream();
     dac->closeStream();
     qDebug() << " run stopped\n";
-    if (audio_data)
-        delete audio_data;
     if (sine_test)
         delete sine_test;
 

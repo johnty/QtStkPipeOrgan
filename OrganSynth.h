@@ -45,9 +45,7 @@ private:
 
     RtAudio *dac;
     RtMidiIn *midi_in;
-    StkFrames *audio_data;
     bool running;
-    Voicer *voicer;
 
 };
 
