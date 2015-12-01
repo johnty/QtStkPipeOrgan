@@ -35,7 +35,7 @@
 <li><p>This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. </p></li>
 <li><p>The goal is a cross-platform C++ GUI application that simulates basic types of common organ pipes, the: flue and reed.</p></li>
 <li><p>The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. </p></li>
-<li><p>Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. </p></li>
+<li><p>Using a single MIDI keyboard, the behaviour of a small chamber organ can be simulated. </p></li>
 <li>
 <p>The rest of the report consists of the following sections: </p>
 
@@ -44,11 +44,11 @@
 <li>A discussion on how various parts of the organ may be modelled.</li>
 <li>Implementation details of the C++ application so far.</li>
 </ol>
-</li>
-</ul>
 
 <p><img src="img/ryerson.jpg" alt="Ryerson Organ">
 The organ at Ryerson United Church, Vancouver BC</p>
+</li>
+</ul>
 
 <hr>
 
@@ -76,10 +76,10 @@ The organ at Ryerson United Church, Vancouver BC</p>
 <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg" alt="flue pipes">
 (Clarke 1877)</li>
 <li>Frequency is tuned by length of pipe</li>
-<li>Typically metal (usually cylindrical) or wood (often rectangular)</li>
+<li>Typically metal (usually cylindrical) or wood (often rectangular)
+<img src="img/pipeshapes.jpg" alt="pipe shapes">
+(Clarke 1877)</li>
 </ul>
-
-<p><img src="img/pipeshapes.jpg" alt="pipe shapes"></p>
 
 <h4>
 <a id="reed-pipes" class="anchor" href="#reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reed Pipes</h4>
@@ -145,6 +145,18 @@ The organ at Ryerson United Church, Vancouver BC</p>
 </h4>
 
 <h2>
+<a id="components-that-may-be-of-interest-for-modelling" class="anchor" href="#components-that-may-be-of-interest-for-modelling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Components that may be of interest for Modelling</h2>
+
+<ul>
+<li><p>Pipes: physical response of the different kinds of pipes (geometry, materials)</p></li>
+<li><p>Interaction between pipes (e.g. detuned sets of stops for tremolo effects)</p></li>
+<li><p>Imperfections due to environment conditions (e.g. temperature fluctuations)</p></li>
+<li><p>Air source: fluctuations in air pressure; physical limits of blowers, tracker actuation</p></li>
+<li><p>Control system: coupling, mapping of manuals to different registers</p></li>
+<li><p>Reverberance of spaces</p></li>
+</ul>
+
+<h2>
 <a id="commercial-products" class="anchor" href="#commercial-products" aria-hidden="true"><span class="octicon octicon-link"></span></a>Commercial Products</h2>
 
 <p>One of the more famous virtual software organ systems is <a href="https://www.hauptwerk.com/learn-more/overview/">Hauptwerk</a>. It has an extensive sample-based library of many organs.</p>
@@ -180,7 +192,7 @@ The organ at Ryerson United Church, Vancouver BC</p>
 
 <ul>
 <li><p>ASIO drivers were used (in the Windows version) for RtAudio DAC</p></li>
-<li><p>512 buffer size was used. This means at 44100kHz sample rate, we need to compute the 512 samples every ~11ms (also the systen latency)</p></li>
+<li><p>512 buffer size was used. This means at 44100kHz sample rate, we need to compute the 512 samples every ~11ms (also the system latency)</p></li>
 <li><p>Will affect upper limit of polyphony</p></li>
 <li>
 <p>A very crude sine wave test was done as a "stress test":</p>
