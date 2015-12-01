@@ -24,32 +24,76 @@
 
 <p>Johnty Wang (<a href="mailto:johnty.wang@mail.mcgill.ca">johnty.wang@mail.mcgill.ca</a>)</p>
 
-<p>Project Final Report for MUMT618, Fall 2015. </p>
+<p>Project Report for MUMT618, Fall 2015. </p>
 
 <p>Instructor: Prof. Gary Scavone</p>
 
 <h2>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. The result is a cross-platform C++ GUI application that simulates a X-register pipe organ with X1 and X2 sets of flue and reed pipes, respectively. The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. The rest of the report consists of the following sections: 1.) An introduction and background on the physical layout and relevant parts of a pipe organ, 2.) A discussion on how the sound of different pipes are modelled, and 3.) Implementation details of the C++ application, with some potentially useful documentation for anyone interested in integrating Stk with the QT C++ framework.</p>
+<ul>
+<li><p>This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. </p></li>
+<li><p>The goal is a cross-platform C++ GUI application that simulates basic types of common organ pipes, the: flue and reed.</p></li>
+<li>The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. </li>
+<li>Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. </li>
+<li>The rest of the report consists of the following sections: 
 
-<p><img src="https://lh3.googleusercontent.com/O4K-Vno-Zug19PoHnjrpKpGd7iiH60VzjzdGV9Yd44mu2XtwHTpfwnorpvIKD-u4700ygEuUS0zomSmuRchUVjZO50UU3rHOPul27YiTWvYPB7StNKsgmzb7IO97Pg1s9u5_FWvUhm1EtSV1SM1PCk0Y9eg_X3Z0J2tI5HuVJVuLOz5hzeQH_Yi849jJHPGf6zPzbJdhLqLMfGsaz1COOsZRFyl-i2NrZGaQeFJsEvAPnVdERwQkpNV0Zz7jgGJ8NSwKmgIKuiPbJu645GBn7uXz8n5lOBnYjheR6H3yulkYVhhY5DKxFT0cCa2gVMvEnDd-X5DjjbhwwplG6dcsnr0mpC_YHlt3YVmBDIesY9sd1tmZeRsGo7guHFjSRU6w-6moN8xKjhC2uFnIkqS1BxOPae7jlgkT_DK0csieqiL8JU7inJSuTn1gcywES7v8U0pyYk7Zp46c163YCTEqi07QiR796bL1zfwR9U6-RR1pYDlORDjfuNrEMrirZM_WdmQmNPF9KSI1ncczPxqw2m7WOVMeiVCEVA2foEm0dMU=w685-h913-no" alt="Ryerson United Church, Vancouver BC"></p>
+<ol>
+<li>An introduction and background on the physical layout and relevant parts of a pipe organ </li>
+<li>A discussion on how various parts of the organ may be modelled</li>
+<li>Implementation details of the C++ application so far</li>
+</ol>
+</li>
+</ul>
+
+<p><img src="img/ryerson.jpg" alt="Ryerson Organ"></p>
 
 <p>The organ at Ryerson United Church, Vancouver BC</p>
+
+<hr>
 
 <h2>
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>Despite sharing what looks like a similar control scheme to a piano, the pipe organ is a very different instrument.</p>
-
-<p>The pipe organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)</p>
+<ul>
+<li>Despite having a chromatic keyboard, the organ is very different to most keyboard instruments</li>
+<li>The pipe organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)</li>
+<li>Unlike other wind instruments, the air is not supplied by the player directly. Traditionally created using manual bellows; nowadays digital blowers
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/HalberstadtBurchardiChurchBellows.jpg" alt="organ bellows">
+(img src: wikipedia)</li>
+<li>Air is fed into banks of pipes that produce sound</li>
+<li>A large church organ can have thousands of pipes</li>
+</ul>
 
 <h3>
 <a id="flue-and-reed-pipes" class="anchor" href="#flue-and-reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flue and Reed Pipes</h3>
 
-<p>There are two main kinds of pipes on an organ. The first is a flue pipe, which </p>
+<p>There are two main kinds of pipes on an organ.</p>
 
-<p>The reed pipe is</p>
+<ul>
+<li>The flue pipe is somewhat similar in operation to a flute (or perhaps more appropriately, a recorder)</li>
+</ul>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg" alt="flue pipes">
+(img src: wikipedia/Clarke)</p>
+
+<ul>
+<li>The reed pipe is more like a clarinet:</li>
+<li>The pipes are grouped together in a row (called "stops" or "ranks")</li>
+</ul>
+
+<p><img src="img/windchests.png" alt="wind chest">
+<img src="img/windchests2.png" alt="cross sectional">
+(img src: Clarke 1877)</p>
+
+<h3>
+<a id="adjusting-the-sound" class="anchor" href="#adjusting-the-sound" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adjusting the Sound</h3>
+
+<ul>
+<li>Control of individual pipe by adjusting its physical parameters (Voicing)</li>
+<li><p>Choosing combinations of stops to be used</p></li>
+<li>
+</ul>
 
 <h3>
 <a id="air-source" class="anchor" href="#air-source" aria-hidden="true"><span class="octicon octicon-link"></span></a>Air Source</h3>
@@ -74,11 +118,11 @@
 
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Pipe_organ_tracker_action.jpg" alt="Tracker Organ"></p>
 
-<p>Most modern organs are digital</p>
+<p>Most modern organs are digitally controlled. Electronic </p>
 
-<h3>
-<a id="the-organ-could-be-considered-the-worlds-first-synthesizer" class="anchor" href="#the-organ-could-be-considered-the-worlds-first-synthesizer" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>The Organ could be considered the world's first "synthesizer"</em>
-</h3>
+<h4>
+<a id="the-organ-is-probably-the-worlds-first-synthesizer" class="anchor" href="#the-organ-is-probably-the-worlds-first-synthesizer" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>The Organ is probably the world's first "synthesizer"</em>
+</h4>
 
 <p>Some of the more obvious differences include the sound generation mechanism: the pipe organ functions more like a wind instrument (both reeded and open hole) rather than a string struck by a percussive hammer. </p>
 
