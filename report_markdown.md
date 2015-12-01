@@ -23,6 +23,7 @@ Instructor: Prof. Gary Scavone
 	3. Implementation details of the C++ application so far.
 
 	![Ryerson Organ](img/ryerson.jpg)
+	
 	The organ at Ryerson United Church, Vancouver BC
 
 ---
@@ -44,7 +45,9 @@ There are two main kinds of pipes on an organ.
 
 * The flue pipe is somewhat similar in operation to a flute (or perhaps more appropriately, a recorder)
 ![flue pipes](https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg)
-(Clarke 1877)
+
+	(Clarke 1877)
+	
 * Frequency is tuned by length of pipe
 * Typically metal (usually cylindrical) or wood (often rectangular)
 ![pipe shapes](img/pipeshapes.jpg)
