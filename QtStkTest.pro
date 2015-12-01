@@ -53,13 +53,17 @@ SOURCES += main.cpp\
     ../../src/ADSR.cpp \
     ../../src/BiQuad.cpp \
     ../../src/BlowBotl.cpp \
+    ../../src/Clarinet.cpp \
     ../../src/DelayL.cpp \
+    ../../src/Envelope.cpp \
     ../../src/Flute.cpp \
     ../../src/Mutex.cpp \
     ../../src/Noise.cpp \
     ../../src/OnePole.cpp \
+    ../../src/OneZero.cpp \
     ../../src/PoleZero.cpp \
     ../../src/RtWvOut.cpp \
+    ../../src/Saxofony.cpp \
     ../../src/SineWave.cpp \
     ../../src/Stk.cpp \
     ../../src/RtAudio.cpp \
@@ -72,7 +76,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     ../../include/ADSR.h \
     ../../include/BiQuad.h \
-    ../../include/BlowBtl.h \
+    ../../include/BlowBotl.h \
+    ../../include/Clarinet.h \
     ../../include/DelayL.h \
     ../../include/Flute.h \
     ../../include/Instrmnt.h \
@@ -80,8 +85,11 @@ HEADERS  += mainwindow.h \
     ../../include/Noise.h \
     ../../include/PoleZero.h \
     ../../include/OnePole.h \
+    ../../include/OneZero.h \
+    ../../include/ReedTable.h \
     ../../include/RtMidi.h \
     ../../include/RtWvOut.h \
+    ../../include/Saxophony.h \
     ../../include/Stk.h \
     ../../include/SineWave.h \
     ../../include/Voicer.h \    

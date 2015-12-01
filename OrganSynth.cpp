@@ -13,6 +13,8 @@ StkFloat norm = (float)0.5/NUM_SINES;
 
 static StkFrames audio_data0;
 static StkFrames audio_data1;
+static StkFrames audio_data2;
+static StkFrames audio_data3;
 static OrganRank rank0;
 static OrganRank rank1;
 static OrganRank rank2;
@@ -33,6 +35,8 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
 
     audio_data0.resize(512);
     audio_data1.resize(512);
+    audio_data2.resize(512);
+    audio_data3.resize(512);
 
     //sine test
 
@@ -133,10 +137,12 @@ int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBuffer
     register StkFloat *samples = (StkFloat*) outputBuffer;
     rank0.tick(audio_data0);
     rank1.tick(audio_data1);
+    rank2.tick(audio_data2);
+    rank3.tick(audio_data3);
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        samples[2*i] = audio_data0[i] + audio_data1[i];
-        samples[2*i+1] = audio_data0[i] + audio_data1[i];
+        samples[2*i] = audio_data0[i] + audio_data1[i] + audio_data2[i] + audio_data3[i];
+        samples[2*i+1] = audio_data0[i] + audio_data1[i] + audio_data2[i] + audio_data3[i];
         //        samples[2*i] = 0.0;
         //        samples[2*i+1] = 0.0;
         //        if (isSine)
@@ -172,15 +178,23 @@ void OrganSynth::runSynth()
 
     int noteStack = 0;
 
-    int poly = 4;
+    int poly = 16;
     OrganFlue* fluePipes[poly];
     BlowBotl* btlPipes[poly];
+    Clarinet* clarPipes[poly];
+    Saxofony* saxPipes[poly];
+
     for (int i=0; i<poly; i++)
     {
         fluePipes[i] = new OrganFlue();
         btlPipes[i] = new BlowBotl();
+        clarPipes[i] = new Clarinet();
+        saxPipes[i] = new Saxofony(16.0);
+
         rank0.addInstrument(fluePipes[i]);
         rank1.addInstrument(btlPipes[i]);
+        rank2.addInstrument(clarPipes[i]);
+        rank3.addInstrument(saxPipes[i]);
         rank_active[i] = false;
     }
 
@@ -216,16 +230,24 @@ void OrganSynth::runSynth()
                         testFreq = 440.0 * pow(2.0, (note-69)/12.0);
 
                         if (rank_active[0])
-                            rank0.noteOn(note, 1.0, 0);
+                            rank0.noteOn(note, 64.0, 0);
                         if (rank_active[1])
-                            rank1.noteOn(note, 1.0, 0);
+                            rank1.noteOn(note-12, 64.0, 0);
+                        if (rank_active[2])
+                            rank2.noteOn(note, 64.0, 0);
+                        if (rank_active[3])
+                            rank3.noteOn(note+12, 64.0, 0);
                     }
                     if ((message[0]>>4 == 8)) //note off
                     {
                         if (rank_active[0])
-                            rank0.noteOff(note, 1.0, 0);
+                            rank0.noteOff(note, 64.0, 0);
                         if (rank_active[1])
-                            rank1.noteOff(note, 1.0, 0);
+                            rank1.noteOff(note-12, 64.0, 0);
+                        if (rank_active[2])
+                            rank2.noteOff(note, 64.0, 0);
+                        if (rank_active[3])
+                            rank3.noteOff(note+12, 64.0, 0);
                     }
 
                 }
@@ -252,6 +274,12 @@ void OrganSynth::runSynth()
     {
         rank0.removeInstrument(fluePipes[i]);
         delete fluePipes[i];
+
+        rank1.removeInstrument(btlPipes[i]);
+        delete btlPipes[i];
+
+        rank2.removeInstrument(clarPipes[i]);
+        delete clarPipes[i];
     }
 
 

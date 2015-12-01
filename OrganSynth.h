@@ -13,6 +13,8 @@
 #include "RtMidi.h"
 
 #include "BlowBotl.h"
+#include "Clarinet.h"
+#include "Saxofony.h"
 
 #include "Instrmnt.h"
 #include "Voicer.h"

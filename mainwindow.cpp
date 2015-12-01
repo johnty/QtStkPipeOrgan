@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     synth_thread = NULL;
     ui->setupUi(this);
 
+    ui->checkBoxRank0->setEnabled(false);
+    ui->checkBoxRank1->setEnabled(false);
+    ui->checkBoxRank2->setEnabled(false);
+    ui->checkBoxRank3->setEnabled(false);
 
     refreshMidi();
 }

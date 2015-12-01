@@ -101,6 +101,9 @@
     <property name="text">
      <string>Rank0 : Flutes</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBoxRank1">
     <property name="geometry">
@@ -113,6 +116,9 @@
     </property>
     <property name="text">
      <string>Rank1 : Bottles</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBoxRank2">
@@ -127,6 +133,9 @@
     <property name="text">
      <string>Rank2</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBoxRank3">
     <property name="geometry">
@@ -139,6 +148,9 @@
     </property>
     <property name="text">
      <string>Rank3</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
