@@ -2,29 +2,60 @@
 
 Johnty Wang (johnty.wang@mail.mcgill.ca)
 
-Project Final Report for MUMT618, Fall 2015. 
+Project Report for MUMT618, Fall 2015. 
 
 Instructor: Prof. Gary Scavone
 
 
 ##Introduction
 
-This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. The result is a cross-platform C++ GUI application that simulates a X-register pipe organ with X1 and X2 sets of flue and reed pipes, respectively. The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. The rest of the report consists of the following sections: 1.) An introduction and background on the physical layout and relevant parts of a pipe organ, 2.) A discussion on how the sound of different pipes are modelled, and 3.) Implementation details of the C++ application, with some potentially useful documentation for anyone interested in integrating Stk with the QT C++ framework.
+* This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. 
 
-![Ryerson United Church, Vancouver BC](https://lh3.googleusercontent.com/O4K-Vno-Zug19PoHnjrpKpGd7iiH60VzjzdGV9Yd44mu2XtwHTpfwnorpvIKD-u4700ygEuUS0zomSmuRchUVjZO50UU3rHOPul27YiTWvYPB7StNKsgmzb7IO97Pg1s9u5_FWvUhm1EtSV1SM1PCk0Y9eg_X3Z0J2tI5HuVJVuLOz5hzeQH_Yi849jJHPGf6zPzbJdhLqLMfGsaz1COOsZRFyl-i2NrZGaQeFJsEvAPnVdERwQkpNV0Zz7jgGJ8NSwKmgIKuiPbJu645GBn7uXz8n5lOBnYjheR6H3yulkYVhhY5DKxFT0cCa2gVMvEnDd-X5DjjbhwwplG6dcsnr0mpC_YHlt3YVmBDIesY9sd1tmZeRsGo7guHFjSRU6w-6moN8xKjhC2uFnIkqS1BxOPae7jlgkT_DK0csieqiL8JU7inJSuTn1gcywES7v8U0pyYk7Zp46c163YCTEqi07QiR796bL1zfwR9U6-RR1pYDlORDjfuNrEMrirZM_WdmQmNPF9KSI1ncczPxqw2m7WOVMeiVCEVA2foEm0dMU=w685-h913-no)
+* The goal is a cross-platform C++ GUI application that simulates basic types of common organ pipes, the: flue and reed.
+* The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. 
+* Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. 
+* The rest of the report consists of the following sections: 
+	1. An introduction and background on the physical layout and relevant parts of a pipe organ 
+	2. A discussion on how various parts of the organ may be modelled
+	3. Implementation details of the C++ application so far
+
+![Ryerson Organ](img/ryerson.jpg)
 
 The organ at Ryerson United Church, Vancouver BC
+
+---
 ##Background
 
-Despite sharing what looks like a similar control scheme to a piano, the pipe organ is a very different instrument.
-
-The pipe organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)
+* Despite having a chromatic keyboard, the organ is very different to most keyboard instruments
+* The pipe organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)
+* Unlike other wind instruments, the air is not supplied by the player directly. Traditionally created using manual bellows; nowadays digital blowers
+![organ bellows](https://upload.wikimedia.org/wikipedia/commons/d/d7/HalberstadtBurchardiChurchBellows.jpg)
+(img src: wikipedia)
+* Air is fed into banks of pipes that produce sound
+* A large church organ can have thousands of pipes
 
 ###Flue and Reed Pipes
 
-There are two main kinds of pipes on an organ. The first is a flue pipe, which 
+There are two main kinds of pipes on an organ.
 
-The reed pipe is
+* The flue pipe is somewhat similar in operation to a flute (or perhaps more appropriately, a recorder)
+
+![flue pipes](https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg)
+(img src: wikipedia/Clarke)
+
+* The reed pipe is more like a clarinet:
+* The pipes are grouped together in a row (called "stops" or "ranks")
+
+![wind chest](img/windchests.png)
+![cross sectional](img/windchests2.png)
+(img src: Clarke 1877)
+
+###Adjusting the Sound
+
+* Control of individual pipe by adjusting its physical parameters (Voicing)
+* Choosing combinations of stops to be used
+
+* 
 
 ###Air Source
 
@@ -49,9 +80,9 @@ Traditionally, everything is linked mechanically (Tracker organs).
 ![Tracker Organ](https://upload.wikimedia.org/wikipedia/commons/9/9b/Pipe_organ_tracker_action.jpg)
 
 
-Most modern organs are digital
+Most modern organs are digitally controlled. Electronic 
 
-###*The Organ could be considered the world's first "synthesizer"*
+####*The Organ is probably the world's first "synthesizer"*
 
 
 
