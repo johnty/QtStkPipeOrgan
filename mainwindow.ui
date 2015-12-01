@@ -131,7 +131,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Rank2</string>
+     <string>Rank2 : Clarinet</string>
     </property>
     <property name="checkable">
      <bool>true</bool>
@@ -147,7 +147,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Rank3</string>
+     <string>Rank3 : Saxofony</string>
     </property>
     <property name="checkable">
      <bool>true</bool>
