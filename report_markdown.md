@@ -51,13 +51,14 @@ There are two main kinds of pipes on an organ.
 * Frequency is tuned by length of pipe
 * Typically metal (usually cylindrical) or wood (often rectangular)
 ![pipe shapes](img/pipeshapes.jpg)
-(Clarke 1877)
+
+	(Clarke 1877)
 
 ####Reed Pipes
 * The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
 ![wind chest](img/reedpipe.jpg)
 
-(Clarke 1877)
+	(Clarke 1877)
 
 * The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".
 
@@ -127,8 +128,10 @@ One of the more famous virtual software organ systems is [Hauptwerk](https://www
 QT Application: cross platform C++ development environment
 
 * User interface for basic control, visual feedback of status
-* MIDI interface for 
+* MIDI interface for reading input from external controller
 * Synthesis module for producing sound, managing voices
+	* STK Voicer class for managing polyphony
+	* STK Instruments for each type of "pipe"
 
 ![test ](img/system.png)
 
@@ -168,7 +171,7 @@ Or, if we're looking at reed pipes:
 
 ###Further Development
 
-* Try modelling different pipe shapes, creating more groups of stops
+* Try actually modelling pipe shapes, creating more groups of stops that behave more like an organ and less like the wind instrument models
 
 * Modelling other effects such as swell boxes, reverb of different spaces
 
