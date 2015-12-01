@@ -20,6 +20,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void on_StopToggled(int stop, bool active);
 
 private slots:
     void on_pushButtonSine_clicked();

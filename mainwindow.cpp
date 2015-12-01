@@ -70,6 +70,7 @@ void MainWindow::on_pushButtonStart_clicked()
     connect(synth_thread, SIGNAL(finished()), my_organsynth, SLOT(stopSynth()));
     connect(this, SIGNAL(toDac(int)), my_organsynth, SLOT(stopSynth()));
     //connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
+    connect(my_organsynth, SIGNAL(sendStopSig(int,bool)), this, SLOT(on_StopToggled(int,bool)));
 
     synth_thread->start();
 }
@@ -113,4 +114,25 @@ void MainWindow::refreshMidi()
 void MainWindow::on_pushButtonRefreshMidi_clicked()
 {
     refreshMidi();
+}
+
+void MainWindow::on_StopToggled(int stop, bool active)
+{
+    qDebug() <<"Stop # " <<stop <<" active = " <<active;
+    switch (stop) {
+    case 0:
+        ui->checkBoxRank0->setChecked(active);
+        break;
+    case 1:
+        ui->checkBoxRank1->setChecked(active);
+        break;
+    case 2:
+        ui->checkBoxRank2->setChecked(active);
+        break;
+    case 3:
+        ui->checkBoxRank3->setChecked(active);
+        break;
+    default:
+        break;
+    }
 }

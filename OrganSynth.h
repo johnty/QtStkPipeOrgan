@@ -1,6 +1,7 @@
 #ifndef OrganSynth_H
 #define OrganSynth_H
 
+#include <QApplication>
 #include <QObject>
 #include <QDebug>
 #include <QThread>
@@ -10,6 +11,8 @@
 #include "OrganSynth.h"
 #include "RtAudio.h"
 #include "RtMidi.h"
+
+#include "BlowBotl.h"
 
 #include "Instrmnt.h"
 #include "Voicer.h"
@@ -29,6 +32,7 @@ public:
     void stopDac() { running = false; }
 
 signals:
+    void sendStopSig(int stop, bool active);
 
 public slots:
     void runSynth();
@@ -36,6 +40,7 @@ public slots:
         qDebug() << "stop called\n";
         running = false;
     }
+    bool getIsRankActive(int rank) {return rank_active[rank]; }
     void toggleSound();
 
 private:
@@ -43,9 +48,12 @@ private:
     static int tick( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
               double streamTime, RtAudioStreamStatus status, void *dataPointer );
 
+    void toggleStop(int rank_number);
+
     RtAudio *dac;
     RtMidiIn *midi_in;
     bool running;
+    bool rank_active[4];
 
 };
 

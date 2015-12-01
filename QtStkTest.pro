@@ -51,6 +51,8 @@ INCLUDEPATH += ../../include/ ../../src/include/
 SOURCES += main.cpp\
         mainwindow.cpp \
     ../../src/ADSR.cpp \
+    ../../src/BiQuad.cpp \
+    ../../src/BlowBotl.cpp \
     ../../src/DelayL.cpp \
     ../../src/Flute.cpp \
     ../../src/Mutex.cpp \
@@ -69,6 +71,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ../../include/ADSR.h \
+    ../../include/BiQuad.h \
+    ../../include/BlowBtl.h \
     ../../include/DelayL.h \
     ../../include/Flute.h \
     ../../include/Instrmnt.h \

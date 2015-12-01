@@ -11,8 +11,12 @@ SineWave *sine2_test;
 SineWave *sines[NUM_SINES];
 StkFloat norm = (float)0.5/NUM_SINES;
 
-static StkFrames audio_data;
+static StkFrames audio_data0;
+static StkFrames audio_data1;
 static OrganRank rank0;
+static OrganRank rank1;
+static OrganRank rank2;
+static OrganRank rank3;
 
 float testFreq = 440.0;
 
@@ -27,7 +31,8 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
     Stk::showWarnings( true );
     qDebug() << Stk::sampleRate();
 
-    audio_data.resize(512);
+    audio_data0.resize(512);
+    audio_data1.resize(512);
 
     //sine test
 
@@ -126,11 +131,12 @@ OrganSynth::~OrganSynth()
 int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
 {
     register StkFloat *samples = (StkFloat*) outputBuffer;
-    rank0.tick(audio_data);
+    rank0.tick(audio_data0);
+    rank1.tick(audio_data1);
     for (unsigned int i=0; i<nBufferFrames; i++)
     {
-        samples[2*i] = audio_data[i];
-        samples[2*i+1] = audio_data[i];
+        samples[2*i] = audio_data0[i] + audio_data1[i];
+        samples[2*i+1] = audio_data0[i] + audio_data1[i];
         //        samples[2*i] = 0.0;
         //        samples[2*i+1] = 0.0;
         //        if (isSine)
@@ -168,15 +174,23 @@ void OrganSynth::runSynth()
 
     int poly = 4;
     OrganFlue* fluePipes[poly];
+    BlowBotl* btlPipes[poly];
     for (int i=0; i<poly; i++)
     {
         fluePipes[i] = new OrganFlue();
+        btlPipes[i] = new BlowBotl();
         rank0.addInstrument(fluePipes[i]);
+        rank1.addInstrument(btlPipes[i]);
+        rank_active[i] = false;
     }
+
+
+
 
 
     while (running)
     {
+        QApplication::processEvents();
 
         try {
 
@@ -192,7 +206,7 @@ void OrganSynth::runSynth()
                 if (nBytes == 3) //possibly a note on
                 {
                     int val = message[0]>>4 ;
-                    qDebug()<< "m>>4 = " << val <<"\n";
+                    //qDebug()<< "m>>4 = " << val <<"\n";
                     //1000 nnnn = note off (nnnn = channel #, 0 indexed)
                     //1001 nnnn = note on
                     int note = message[1];
@@ -201,22 +215,27 @@ void OrganSynth::runSynth()
                         noteStack++;
                         testFreq = 440.0 * pow(2.0, (note-69)/12.0);
 
-                        rank0.noteOn(note, 1.0, 0);
-
+                        if (rank_active[0])
+                            rank0.noteOn(note, 1.0, 0);
+                        if (rank_active[1])
+                            rank1.noteOn(note, 1.0, 0);
                     }
                     if ((message[0]>>4 == 8)) //note off
                     {
-                        noteStack--;
-
-                        rank0.noteOff(note, 1.0, 0);
+                        if (rank_active[0])
+                            rank0.noteOff(note, 1.0, 0);
+                        if (rank_active[1])
+                            rank1.noteOff(note, 1.0, 0);
                     }
 
-
-                    if (noteStack>=1)
-                        isSine = true;
-                    else
-                        isSine = false;
-
+                }
+                if (nBytes == 2)
+                {
+                    if ((message[0]>>4 == 12)) //program change
+                    {
+                        int prg =message[1];
+                        toggleStop(prg);
+                    }
                 }
 
 
@@ -254,4 +273,11 @@ void OrganSynth::runSynth()
 void OrganSynth::toggleSound()
 {
     isSine = !isSine;
+}
+
+void OrganSynth::toggleStop(int rank_number)
+{
+    rank_active[rank_number] = !rank_active[rank_number];
+    //qDebug() <<"orgSynth: rank " <<rank_number<<" active = " << rank_active[rank_number];
+    emit sendStopSig(rank_number, rank_active[rank_number]);
 }
