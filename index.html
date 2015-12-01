@@ -22,38 +22,89 @@
       <h3>
 <a id="a-realtime-pipe-organ-instrument-using-qt-and-stk" class="anchor" href="#a-realtime-pipe-organ-instrument-using-qt-and-stk" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Realtime Pipe Organ Instrument using QT and STK</h3>
 
+<p>Johnty Wang (<a href="mailto:johnty.wang@mail.mcgill.ca">johnty.wang@mail.mcgill.ca</a>)
+Project Final Report for MUMT618, Fall 2015. Instructor: Prof. Gary Scavone</p>
+
+<h3>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h3>
+
 <p>This project report describes the implementation of a pipe organ instrument in C++ using the Stk, RtAudio and QT libraries. The result is a cross-platform C++ GUI application that simulates a X-register pipe organ with X1 and X2 sets of flue and reed pipes, respectively. The instrument appears as a virtual MIDI device that can be controlled by hardware controllers: note-on/off messages control pitches while program changes allow toggling of stops. Using a single MIDI keyboard, the behavior of a small chamber organ can be simulated. The rest of the report consists of the following sections: 1.) An introduction and background on the physical layout and relevant parts of a pipe organ, 2.) A discussion on how the sound of different pipes are modelled, and 3.) Implementation details of the C++ application, with some potentially useful documentation for anyone interested in integrating Stk with the QT C++ framework.</p>
 
 <h3>
-<a id="organ" class="anchor" href="#organ" aria-hidden="true"><span class="octicon octicon-link"></span></a>Organ</h3>
+<a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h3>
 
-<p><img src="img/keyboard.png" alt="alt text" title="keyboard">
-<img src="img/keyboard-flutes.png" alt="test ">
-<img src="https://lh3.googleusercontent.com/O4K-Vno-Zug19PoHnjrpKpGd7iiH60VzjzdGV9Yd44mu2XtwHTpfwnorpvIKD-u4700ygEuUS0zomSmuRchUVjZO50UU3rHOPul27YiTWvYPB7StNKsgmzb7IO97Pg1s9u5_FWvUhm1EtSV1SM1PCk0Y9eg_X3Z0J2tI5HuVJVuLOz5hzeQH_Yi849jJHPGf6zPzbJdhLqLMfGsaz1COOsZRFyl-i2NrZGaQeFJsEvAPnVdERwQkpNV0Zz7jgGJ8NSwKmgIKuiPbJu645GBn7uXz8n5lOBnYjheR6H3yulkYVhhY5DKxFT0cCa2gVMvEnDd-X5DjjbhwwplG6dcsnr0mpC_YHlt3YVmBDIesY9sd1tmZeRsGo7guHFjSRU6w-6moN8xKjhC2uFnIkqS1BxOPae7jlgkT_DK0csieqiL8JU7inJSuTn1gcywES7v8U0pyYk7Zp46c163YCTEqi07QiR796bL1zfwR9U6-RR1pYDlORDjfuNrEMrirZM_WdmQmNPF9KSI1ncczPxqw2m7WOVMeiVCEVA2foEm0dMU=w685-h913-no" alt="Ryerson United Church, Vancouver BC"></p>
+<p>Despite sharing what looks like a similar control scheme to a piano, the pipe organ is a very different instrument.</p>
 
-<p><img src="https://ryersonunited.files.wordpress.com/2014/03/ryerson-organ-pipes.jpg" alt="ext link 2"></p>
+<h2>
+<a id="sound-production-mechanism" class="anchor" href="#sound-production-mechanism" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sound Production Mechanism</h2>
 
-<p>[[File:Cradley Heath Baptist Church Organ A01.JPG|400px|thumb|Interior of the organ at Cradley Heath Baptist Church showing the tracker action. The black rods, called rollers, rotate to transmit movement sideways to line up with the pipes.]]</p>
-
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
+<p>The organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)</p>
 
 <h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<a id="flue-and-reed-pipes" class="anchor" href="#flue-and-reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flue and Reed Pipes</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>There are two main kinds of pipes on an organ. The first is a flue pipe, which </p>
+
+<h2>
+<a id="inputs" class="anchor" href="#inputs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inputs</h2>
+
+<p>Keyboard: 6 octaves of chromatic notes,. Set of 3-6 depending on instrument. Referred to as manuals.</p>
+
+<p>Pedalboard: 1 ~ 3 octaves of chromatic notes, activated by foot</p>
+
+<p>Stops: pull controls </p>
+
+<p>Foot switches: discrete buttons for activating settings</p>
+
+<p><img src="https://lh3.googleusercontent.com/O4K-Vno-Zug19PoHnjrpKpGd7iiH60VzjzdGV9Yd44mu2XtwHTpfwnorpvIKD-u4700ygEuUS0zomSmuRchUVjZO50UU3rHOPul27YiTWvYPB7StNKsgmzb7IO97Pg1s9u5_FWvUhm1EtSV1SM1PCk0Y9eg_X3Z0J2tI5HuVJVuLOz5hzeQH_Yi849jJHPGf6zPzbJdhLqLMfGsaz1COOsZRFyl-i2NrZGaQeFJsEvAPnVdERwQkpNV0Zz7jgGJ8NSwKmgIKuiPbJu645GBn7uXz8n5lOBnYjheR6H3yulkYVhhY5DKxFT0cCa2gVMvEnDd-X5DjjbhwwplG6dcsnr0mpC_YHlt3YVmBDIesY9sd1tmZeRsGo7guHFjSRU6w-6moN8xKjhC2uFnIkqS1BxOPae7jlgkT_DK0csieqiL8JU7inJSuTn1gcywES7v8U0pyYk7Zp46c163YCTEqi07QiR796bL1zfwR9U6-RR1pYDlORDjfuNrEMrirZM_WdmQmNPF9KSI1ncczPxqw2m7WOVMeiVCEVA2foEm0dMU=w685-h913-no" alt="Ryerson United Church, Vancouver BC"></p>
+
+<p>Some of the more obvious differences include the sound generation mechanism: the pipe organ functions more like a wind instrument (both reeded and open hole) rather than a string struck by a percussive hammer. </p>
+
+<p>Second, with exception to the swell box shutters that control the amount of sound that exits the enclosure housing the pipes, the volume produced by the instrument is mostly controlled by the number of active "stops", or groups called "registers" that are activated at the same time. This means that the amount of volume, and tone output is defined by the currently selected mixture of stops, rather than the velocity in which the key is played.</p>
+
+<h2>
+<a id="commercial-products" class="anchor" href="#commercial-products" aria-hidden="true"><span class="octicon octicon-link"></span></a>Commercial Products</h2>
+
+<p>One of the more famous virtual software organ systems is <a href="https://www.hauptwerk.com/learn-more/overview/">Hauptwerk</a>. It has an extensive sample-based library of many organs.</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Most of the development was performed on a Windows laptop with 8GB RAM and an Intel i7-4510u processor. The reason Windows was chosen was, based on prior experience, integrating such cross platform libraries tend to be the most difficult on this operating system, and hence having figured out how to set it up for this case, the rest should be considerably easier.</p>
+
+<p><img src="img/system.png" alt="test "></p>
 
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="instrument-models" class="anchor" href="#instrument-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instrument Models</h3>
 
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+<p>As described in the previous section, there are two main categories of organ pipes: the flue and the reed.</p>
+
+<p><img src="img/keyboard-flutes.png" alt="test "></p>
+
+<h2>
+<a id="framework-overview" class="anchor" href="#framework-overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Framework Overview</h2>
+
+<p>QT is ... Stk/RtAudio</p>
+
+<h2>
+<a id="library-integration" class="anchor" href="#library-integration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Library Integration</h2>
+
+<p>challenges (esp. windows)</p>
+
+<h2>
+<a id="realtime-audio-implementation" class="anchor" href="#realtime-audio-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Realtime Audio Implementation</h2>
+
+<p>Virtual MIDI Control</p>
+
+<h3>
+<a id="performance-metrics" class="anchor" href="#performance-metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance Metrics</h3>
+
+<p>Very early in the implementation, as soon as the real time dac was integrated, I wanted to make sure there was enough processing power to handle a large number of voices. As a very crude first test, I attempted to compute a large number of sine waves. The number achieved without noticeable dropouts in the audio stream was somewhere between 512 and 800 simultaneous Stk Sine objects that were computed sample by sample (using a single .tick() command for each frame. As a comparison, the same code, when running on a desktop-class i5 system, ran without dropouts at around 900 objects. Of course, this is not a rigorous test by any means, but should provide a general ballpark figure.</p>
+
+<h3>
+<a id="discussion-and-conclusion" class="anchor" href="#discussion-and-conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussion and Conclusion</h3>
+
+<p>loren ipsum</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/johnty/QtStkPipeOrgan">QtStkPipeOrgan</a> is maintained by <a href="https://github.com/johnty">johnty</a>.</span>
