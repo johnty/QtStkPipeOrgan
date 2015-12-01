@@ -80,26 +80,25 @@
 <p>(Clarke 1877)</p>
 </li>
 <li><p>Frequency is tuned by length of pipe</p></li>
-<li>Typically metal (usually cylindrical) or wood (often rectangular)
-<img src="img/pipeshapes.jpg" alt="pipe shapes">
-</li>
-</ul>
+<li>
+<p>Typically metal (usually cylindrical) or wood (often rectangular)
+<img src="img/pipeshapes.jpg" alt="pipe shapes"></p>
 
 <p>(Clarke 1877)</p>
+</li>
+</ul>
 
 <h4>
 <a id="reed-pipes" class="anchor" href="#reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reed Pipes</h4>
 
 <ul>
-<li>The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
-<img src="img/reedpipe.jpg" alt="wind chest">
-</li>
-</ul>
+<li>
+<p>The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
+<img src="img/reedpipe.jpg" alt="wind chest"></p>
 
 <p>(Clarke 1877)</p>
-
-<ul>
-<li>The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".</li>
+</li>
+<li><p>The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".</p></li>
 </ul>
 
 <p><img src="img/windchests.png" alt="wind chest">
@@ -174,8 +173,14 @@
 
 <ul>
 <li>User interface for basic control, visual feedback of status</li>
-<li>MIDI interface for </li>
-<li>Synthesis module for producing sound, managing voices</li>
+<li>MIDI interface for reading input from external controller</li>
+<li>Synthesis module for producing sound, managing voices
+
+<ul>
+<li>STK Voicer class for managing polyphony</li>
+<li>STK Instruments for each type of "pipe"</li>
+</ul>
+</li>
 </ul>
 
 <p><img src="img/system.png" alt="test "></p>
@@ -221,7 +226,7 @@
 <a id="further-development" class="anchor" href="#further-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Development</h3>
 
 <ul>
-<li><p>Try modelling different pipe shapes, creating more groups of stops</p></li>
+<li><p>Try actually modelling pipe shapes, creating more groups of stops that behave more like an organ and less like the wind instrument models</p></li>
 <li><p>Modelling other effects such as swell boxes, reverb of different spaces</p></li>
 <li><p>Use with more controllers, so multiple stops can be played concurrently on each controller</p></li>
 <li><p>Control with non-keyboard controllers</p></li>
