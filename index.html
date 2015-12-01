@@ -40,16 +40,15 @@
 <p>The rest of the report consists of the following sections: </p>
 
 <ol>
-<li>An introduction and background on the physical layout and relevant parts of a pipe organ </li>
-<li>A discussion on how various parts of the organ may be modelled</li>
-<li>Implementation details of the C++ application so far</li>
+<li>An introduction and background on the physical layout and relevant parts of a pipe organ. </li>
+<li>A discussion on how various parts of the organ may be modelled.</li>
+<li>Implementation details of the C++ application so far.</li>
 </ol>
 </li>
 </ul>
 
-<p><img src="img/ryerson.jpg" alt="Ryerson Organ"></p>
-
-<p>The organ at Ryerson United Church, Vancouver BC</p>
+<p><img src="img/ryerson.jpg" alt="Ryerson Organ">
+The organ at Ryerson United Church, Vancouver BC</p>
 
 <hr>
 
@@ -57,13 +56,11 @@
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h2>
 
 <ul>
-<li><p>Despite having a chromatic keyboard, the organ is very different to most keyboard instruments</p></li>
-<li><p>The pipe organ is a wind instrument, as opposed to string/percussion instruments that most other are. (One other exception is the accordion!)</p></li>
-<li><p>Unlike other wind instruments, the air is not supplied by the player directly. Traditionally created using manual bellows; nowadays digital blowers
+<li><p>Despite having a chromatic keyboard, the organ is a wind instrument and very different to most keyboard instruments. (One other exception is the accordion!)</p></li>
+<li><p>Unlike other wind instruments, the air is not supplied by the player directly. Traditionally created using manual bellows; nowadays digital blowers.
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/HalberstadtBurchardiChurchBellows.jpg" alt="organ bellows">
 (img src: wikipedia)</p></li>
-<li><p>Air is fed into banks of pipes that produce sound</p></li>
-<li><p>A large church organ can have thousands of pipes</p></li>
+<li><p>Air is fed into banks of pipes that produce sound.</p></li>
 </ul>
 
 <h3>
@@ -71,63 +68,71 @@
 
 <p>There are two main kinds of pipes on an organ.</p>
 
+<h4>
+<a id="flue-pipes" class="anchor" href="#flue-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flue Pipes</h4>
+
 <ul>
-<li>The flue pipe is somewhat similar in operation to a flute (or perhaps more appropriately, a recorder)</li>
+<li>The flue pipe is somewhat similar in operation to a flute (or perhaps more appropriately, a recorder)
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg" alt="flue pipes">
+(Clarke 1877)</li>
+<li>Frequency is tuned by length of pipe</li>
+<li>Typically metal (usually cylindrical) or wood (often rectangular)</li>
 </ul>
 
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/PSM_V40_D651_Flue_stop_organ_pipes.jpg" alt="flue pipes">
-(img src: wikipedia/Clarke)</p>
+<p><img src="img/pipeshapes.jpg" alt="pipe shapes"></p>
+
+<h4>
+<a id="reed-pipes" class="anchor" href="#reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reed Pipes</h4>
 
 <ul>
-<li>The reed pipe is more like a clarinet:</li>
-<li>The pipes are grouped together in a row (called "stops" or "ranks")</li>
+<li><p>The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
+<img src="img/reedpipe.jpg" alt="wind chest">
+(Clarke 1877)</p></li>
+<li><p>The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".</p></li>
 </ul>
 
 <p><img src="img/windchests.png" alt="wind chest">
 <img src="img/windchests2.png" alt="cross sectional">
 (img src: Clarke 1877)</p>
 
+<ul>
+<li><p>If a stop is active, there is a mechanical (or electrical) link between the keyboard note, and the valve associated with a particular pipe.</p></li>
+<li><p>Stops that are "unique" to the instrument are called principles, while others often bear the names of instruments the stop is supposed to imitate.</p></li>
+<li><p>A large church organ can have thousands of pipes. (e.g. St Andrews &amp; St Paul, Montreal: ~7000 pipes!)</p></li>
+</ul>
+
 <h3>
 <a id="adjusting-the-sound" class="anchor" href="#adjusting-the-sound" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adjusting the Sound</h3>
 
 <ul>
-<li>Control of individual pipe by adjusting its physical parameters (Voicing)</li>
-<li><p>Choosing combinations of stops to be used</p></li>
-<li>
+<li><p>Control of individual pipe by adjusting its physical parameters (Voicing)</p></li>
+<li><p>Choosing combinations of stops to be used (Registration)</p></li>
 </ul>
-
-<h3>
-<a id="air-source" class="anchor" href="#air-source" aria-hidden="true"><span class="octicon octicon-link"></span></a>Air Source</h3>
-
-<p>The rows of organ</p>
-
-<h3>
-<a id="combinations" class="anchor" href="#combinations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Combinations</h3>
 
 <h3>
 <a id="control-systeminputs" class="anchor" href="#control-systeminputs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Control System/Inputs</h3>
 
 <p>Keyboard: 6 octaves of chromatic notes,. Set of 3-6 depending on instrument. Referred to as manuals.</p>
 
-<p>Pedalboard: 1 ~ 3 octaves of chromatic notes, activated by foot</p>
+<p>Pedalboard: 1 ~ 3 octaves of chromatic notes, activated by the foot. Traditionally assigned to large, bass pipes.</p>
 
-<p>Stops: pull controls </p>
+<p>Stops: draw tabs that activate each set of pipes</p>
 
-<p>Foot switches: discrete buttons for activating settings, swell shutters that control</p>
+<p>Foot switches: discrete buttons for activating settings, swell shutters that control volume by adjusting blinds in which certain pipes are housed</p>
 
 <p>Traditionally, everything is linked mechanically (Tracker organs).</p>
 
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Pipe_organ_tracker_action.jpg" alt="Tracker Organ"></p>
 
-<p>Most modern organs are digitally controlled. Electronic </p>
+<p>Most modern organs are digitally controlled. Allows more flexible coupling, and quick recall of complex combinations.</p>
 
 <h4>
 <a id="the-organ-is-probably-the-worlds-first-synthesizer" class="anchor" href="#the-organ-is-probably-the-worlds-first-synthesizer" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>The Organ is probably the world's first "synthesizer"</em>
 </h4>
 
-<p>Some of the more obvious differences include the sound generation mechanism: the pipe organ functions more like a wind instrument (both reeded and open hole) rather than a string struck by a percussive hammer. </p>
-
-<p>Second, with exception to the swell box shutters that control the amount of sound that exits the enclosure housing the pipes, the volume produced by the instrument is mostly controlled by the number of active "stops", or groups called "registers" that are activated at the same time. This means that the amount of volume, and tone output is defined by the currently selected mixture of stops, rather than the velocity in which the key is played.</p>
+<h4>
+<a id="can-fully-reproduce-a-performance-from-recorded-signals" class="anchor" href="#can-fully-reproduce-a-performance-from-recorded-signals" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>Can "fully reproduce" a performance from recorded signals</em>
+</h4>
 
 <h2>
 <a id="commercial-products" class="anchor" href="#commercial-products" aria-hidden="true"><span class="octicon octicon-link"></span></a>Commercial Products</h2>
@@ -137,7 +142,13 @@
 <h3>
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h3>
 
-<p>Most of the development was performed on a Windows laptop with 8GB RAM and an Intel i7-4510u processor. The reason Windows was chosen was, based on prior experience, integrating such cross platform libraries tend to be the most difficult on this operating system, and hence having figured out how to set it up for this case, the rest should be considerably easier.</p>
+<p>QT Application: cross platform C++ development environment</p>
+
+<ul>
+<li>User interface for basic control, visual feedback of status</li>
+<li>MIDI interface for </li>
+<li>Synthesis module for producing sound, managing voices</li>
+</ul>
 
 <p><img src="img/system.png" alt="test "></p>
 
@@ -172,6 +183,11 @@
 <a id="discussion-and-conclusion" class="anchor" href="#discussion-and-conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussion and Conclusion</h3>
 
 <p>loren ipsum</p>
+
+<h3>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h3>
+
+<p>W. H. Clarke. An Outline of the Structure of the Pipe Organ. Oliver Ditson &amp; Co. Boston. 1877.</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/johnty/QtStkPipeOrgan">QtStkPipeOrgan</a> is maintained by <a href="https://github.com/johnty">johnty</a>.</span>
