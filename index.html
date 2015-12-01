@@ -85,15 +85,21 @@ The organ at Ryerson United Church, Vancouver BC</p>
 <a id="reed-pipes" class="anchor" href="#reed-pipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reed Pipes</h4>
 
 <ul>
-<li><p>The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
+<li>The reed pipe is more like a clarinet (or very large single reed harmonica, perhaps).
 <img src="img/reedpipe.jpg" alt="wind chest">
-(Clarke 1877)</p></li>
-<li><p>The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".</p></li>
+</li>
+</ul>
+
+<p>(Clarke 1877)</p>
+
+<ul>
+<li>The pipes are grouped together in a row (called "stops" or "ranks"), and connected to the air source or "wind chest".</li>
 </ul>
 
 <p><img src="img/windchests.png" alt="wind chest">
-<img src="img/windchests2.png" alt="cross sectional">
-(img src: Clarke 1877)</p>
+<img src="img/windchests2.png" alt="cross sectional"></p>
+
+<p>(Clarke 1877)</p>
 
 <ul>
 <li><p>If a stop is active, there is a mechanical (or electrical) link between the keyboard note, and the valve associated with a particular pipe.</p></li>
@@ -126,6 +132,10 @@ The organ at Ryerson United Church, Vancouver BC</p>
 
 <p>Most modern organs are digitally controlled. Allows more flexible coupling, and quick recall of complex combinations.</p>
 
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Organ_Console%2C_Holy_Trinity%2C_Buffalo.jpeg" alt="Holy Trinity Organ Console"></p>
+
+<p>(Organ console at Holy Trinity, Buffalo. src: wikipedia)</p>
+
 <h4>
 <a id="the-organ-is-probably-the-worlds-first-synthesizer" class="anchor" href="#the-organ-is-probably-the-worlds-first-synthesizer" aria-hidden="true"><span class="octicon octicon-link"></span></a><em>The Organ is probably the world's first "synthesizer"</em>
 </h4>
@@ -153,39 +163,56 @@ The organ at Ryerson United Church, Vancouver BC</p>
 <p><img src="img/system.png" alt="test "></p>
 
 <h3>
-<a id="instrument-models" class="anchor" href="#instrument-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instrument Models</h3>
+<a id="synthesis-organ-model" class="anchor" href="#synthesis-organ-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Synthesis: Organ Model</h3>
 
 <p>As described in the previous section, there are two main categories of organ pipes: the flue and the reed.</p>
 
-<p><img src="img/keyboard-flutes.png" alt="test "></p>
+<p>A first-pass attempt at putting something together, given the existing models in Stk might look like:</p>
 
-<h2>
-<a id="framework-overview" class="anchor" href="#framework-overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Framework Overview</h2>
+<p><img src="img/keyboard-flutes.png" alt="keyboard flutes?"></p>
 
-<p>QT is ... Stk/RtAudio</p>
+<p>Or, if we're looking at reed pipes:</p>
 
-<h2>
-<a id="library-integration" class="anchor" href="#library-integration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Library Integration</h2>
-
-<p>challenges (esp. windows)</p>
-
-<h2>
-<a id="realtime-audio-implementation" class="anchor" href="#realtime-audio-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Realtime Audio Implementation</h2>
-
-<p>Virtual MIDI Control</p>
+<p><img src="img/keyboard-clarinet.png" alt="keyboard clarinets?"></p>
 
 <h3>
-<a id="performance-metrics" class="anchor" href="#performance-metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance Metrics</h3>
+<a id="realtime-audiomidi-considerations" class="anchor" href="#realtime-audiomidi-considerations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Realtime Audio/MIDI Considerations</h3>
 
-<p>Very early in the implementation, as soon as the real time dac was integrated, I wanted to make sure there was enough processing power to handle a large number of voices. As a very crude first test, I attempted to compute a large number of sine waves. The number achieved without noticeable dropouts in the audio stream was somewhere between 512 and 800 simultaneous Stk Sine objects that were computed sample by sample (using a single .tick() command for each frame. As a comparison, the same code, when running on a desktop-class i5 system, ran without dropouts at around 900 objects. Of course, this is not a rigorous test by any means, but should provide a general ballpark figure.</p>
+<ul>
+<li><p>ASIO drivers were used (in the Windows version) for RtAudio DAC</p></li>
+<li><p>512 buffer size was used. This means at 44100kHz sample rate, we need to compute the 512 samples every ~11ms (also the systen latency)</p></li>
+<li><p>Will affect upper limit of polyphony</p></li>
+<li>
+<p>A very crude sine wave test was done as a "stress test":</p>
+
+<ul>
+<li>~500 waves on i5 Mobile CPU</li>
+<li>~900 waves on i5 Desktop CPU</li>
+</ul>
+</li>
+<li><p>Actual synthesis is more computationally extensive, but this gives a good ballpark idea</p></li>
+<li><p>RtMIDI for MIDI Input. If using as a soft instrument, virtual inputs possible (OSX/Linux), loopMidi on Windows</p></li>
+</ul>
 
 <h3>
-<a id="discussion-and-conclusion" class="anchor" href="#discussion-and-conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussion and Conclusion</h3>
+<a id="demonstration" class="anchor" href="#demonstration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demonstration</h3>
 
-<p>loren ipsum</p>
+<p><img src="https://davidcmoisan.files.wordpress.com/2011/09/clippy-bluescreen-copy_thumb.png?w=662&amp;h=529" alt="broken"></p>
+
+<h3>
+<a id="further-development" class="anchor" href="#further-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Further Development</h3>
+
+<ul>
+<li><p>Try modelling different pipe shapes, creating more groups of stops</p></li>
+<li><p>Modelling other effects such as swell boxes, reverb of different spaces</p></li>
+<li><p>Use with more controllers, so multiple stops can be played concurrently on each controller</p></li>
+<li><p>Control with non-keyboard controllers</p></li>
+</ul>
 
 <h3>
 <a id="references" class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h3>
+
+<p>D. Baker. The Organ : a Brief Guide to its Construction, History, Usage and Music. 1991.</p>
 
 <p>W. H. Clarke. An Outline of the Structure of the Pipe Organ. Oliver Ditson &amp; Co. Boston. 1877.</p>
 
