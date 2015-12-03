@@ -178,7 +178,7 @@ void OrganSynth::runSynth()
 
     int noteStack = 0;
 
-    int poly = 16;
+    const int poly = 16;
     OrganFlue* fluePipes[poly];
     BlowBotl* btlPipes[poly];
     Clarinet* clarPipes[poly];
@@ -237,6 +237,20 @@ void OrganSynth::runSynth()
                             rank2.noteOn(note, 64.0, 0);
                         if (rank_active[3])
                             rank3.noteOn(note+12, 64.0, 0);
+
+                        //extra case: MAX/MSP's "makenote" doesn't send note-off, but a note-on with vel=0
+                        if (message[2] == 0)
+                        {
+                            if (rank_active[0])
+                                rank0.noteOff(note, 64.0, 0);
+                            if (rank_active[1])
+                                rank1.noteOff(note-12, 64.0, 0);
+                            if (rank_active[2])
+                                rank2.noteOff(note, 64.0, 0);
+                            if (rank_active[3])
+                                rank3.noteOff(note+12, 64.0, 0);
+                        }
+
                     }
                     if ((message[0]>>4 == 8)) //note off
                     {
