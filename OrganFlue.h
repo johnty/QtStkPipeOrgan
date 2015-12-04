@@ -2,7 +2,7 @@
 #define ORGANFLUE_H
 
 #include "Flute.h"
-#include "stk.h"
+#include "Stk.h"
 
 using namespace stk;
 
