@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QThread>
 #include "OrganSynth.h"
-#include "RtMidi.h"
 
 
 namespace Ui {
@@ -24,19 +23,18 @@ public slots:
 
 private slots:
     void on_pushButtonSine_clicked();
-
-    void on_pushButtonStart_clicked();
-
-    void on_pushButtonStop_clicked();
-
     void on_pushButtonRefreshMidi_clicked();
+
+    void on_comboBoxMidiIn_currentIndexChanged(int index);
 
 signals:
     void stopSignal();
     void toDac(int val);
+    void ChangePort(int port);
 
 private:
 
+    void initDacThread();
     void stopDacProc();
 
     void refreshMidi();

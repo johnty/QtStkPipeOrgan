@@ -2,15 +2,6 @@
 #include <QDebug>
 #include <math.h>
 
-SineWave *sine_test;
-SineWave *sine2_test;
-
-#define NUM_SINES 32
-#define testSine FALSE
-
-SineWave *sines[NUM_SINES];
-StkFloat norm = (float)0.5/NUM_SINES;
-
 static StkFrames audio_data0;
 static StkFrames audio_data1;
 static StkFrames audio_data2;
@@ -22,12 +13,11 @@ static OrganRank rank3;
 
 float testFreq = 440.0;
 
-bool isSine;
-
-OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
+OrganSynth::OrganSynth(QObject *parent) : QObject(parent)
 {
 
-    qDebug()<< "launching synth with midi input " << midi_in_idx;
+    initMidi();
+
     // Set the global sample rate before creating class instances.
     Stk::setSampleRate( 44100.0 );
     Stk::showWarnings( true );
@@ -37,19 +27,6 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
     audio_data1.resize(512);
     audio_data2.resize(512);
     audio_data3.resize(512);
-
-    //sine test
-
-    qDebug() <<"norm = " << norm <<"num sines = " << NUM_SINES << "\n";
-
-    for (int i=0; i<NUM_SINES; i++)
-    {
-        sines[i] = new SineWave();
-
-        float freq = testFreq*pow(2.0, (double)(i%12)/12.0);
-        sines[i]->setFrequency(freq);
-        //qDebug() << "freq " <<i<<" = " << freq<<"\n";
-    }
 
     dac = NULL;
 
@@ -63,10 +40,6 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
 #endif
 #if (defined(__OS_LINUX__))
         dac = new RtAudio(RtAudio::LINUX_ALSA);
-#endif
-
-#if defined(__MACOSX_CORE___)
-        adddd;
 #endif
 
         qDebug() << "numDevs = " << dac->getDeviceCount();
@@ -90,37 +63,6 @@ OrganSynth::OrganSynth(QObject *parent, int midi_in_idx) : QObject(parent)
         error.printMessage();
     }
 
-    //Make MIDI port
-    midi_in = new RtMidiIn();
-    // Check available ports.
-    unsigned int nPorts = midi_in->getPortCount();
-    if ( nPorts == 0 )
-    {
-        std::cout << "No ports available!\n";
-        delete midi_in;
-        midi_in = NULL;
-
-    }
-    else
-    {
-        for (int i=0; i<midi_in->getPortCount(); i++)
-        {
-            qDebug() << "port"<<i<<":"<< midi_in->getPortName().c_str();
-        }
-
-#if (defined(__OS_WIN32__))
-        //expect a loopMidi/virtual port, index 0 (name optional)
-        midi_in->openPort(midi_in_idx, "OrganSynthIn");
-#else
-        //linux/mac have option to open virtal port:
-        //midi_in->openVirtualPort("OrganSynthIn");
-
-        midi_in->openPort(midi_in_idx, "OrganSynthIn");
-#endif
-        // Don't ignore sysex, timing, or active sensing messages.
-        midi_in->ignoreTypes( false, false, false );
-    }
-
 }
 
 OrganSynth::~OrganSynth()
@@ -130,6 +72,63 @@ OrganSynth::~OrganSynth()
         midi_in->closePort();
         delete midi_in;
     }
+}
+
+void OrganSynth::initMidi()
+{
+    //Make MIDI port
+    midi_in = new RtMidiIn();
+    // Check available ports.
+    unsigned int nPorts = midi_in->getPortCount();
+    if ( nPorts == 0 )
+    {
+        std::cout << "No ports available!\n";
+    }
+
+    for (int i=0; i<midi_in->getPortCount(); i++)
+    {
+        qDebug() << "port"<<i<<":"<< midi_in->getPortName().c_str();
+    }
+
+    //MIDI INPUT Handling:
+    // In Windows, we have no choice but to expect at least 1 port
+    // can use loopMIDI to create a virtual port
+    // called "OrganSynthIn" or something
+
+#if (defined(__OS_WIN32__))
+    midi_in->openPort(0, "OrganSynthIn");
+#else
+    //linux/mac have option to open virtal port with RtMidi:
+    // lets do that if we don't have any existing ones
+    if (midi_in->getPortCount() == 0)
+    {
+        qDebug() <<"creating virtual midi port\n";
+        midi_in->openVirtualPort("OrganSynthIn2");
+        //midi_in->openPort(midi_in_idx, "OrganSynthIn");
+    }
+#endif
+    // Don't ignore sysex, timing, or active sensing messages.
+    midi_in->ignoreTypes( false, false, false );
+
+}
+
+int OrganSynth::selectMidiPort(int port)
+{
+    qDebug() <<"Synth received changeport = " <<port;
+    if (midi_in)
+    {
+        if (midi_in->getPortCount() >= port) //valid selection
+        {
+            if (midi_in->isPortOpen()) //close port first
+                midi_in->closePort();
+            midi_in->openPort(port);
+            return 0;
+        }
+        else
+            return -1;
+    }
+    else
+        return -1;
 }
 
 int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *dataPointer)
@@ -143,22 +142,6 @@ int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBuffer
     {
         samples[2*i] = audio_data0[i] + audio_data1[i] + audio_data2[i] + audio_data3[i];
         samples[2*i+1] = audio_data0[i] + audio_data1[i] + audio_data2[i] + audio_data3[i];
-        //        samples[2*i] = 0.0;
-        //        samples[2*i+1] = 0.0;
-        //        if (isSine)
-        //        {
-
-        //            StkFloat val;
-
-        //            for (int j=0; j<NUM_SINES; j++)
-        //            {
-        //                //sines[j]->setFrequency(testFreq*pow(2.0, (double)(i%12)/12.0));
-        //                sines[j]->setFrequency(testFreq);
-        //                val = sines[j]->tick();
-        //                samples[2*i]+=val*norm;
-        //                samples[2*i+1] += val*norm;
-        //            }
-        //        }
     }
     return 0;
 }
@@ -166,7 +149,7 @@ int OrganSynth::tick(void *outputBuffer, void *inputBuffer, unsigned int nBuffer
 void OrganSynth::runSynth()
 {
     running = true;
-    qDebug() << "dac thread started\n";
+    qDebug() << "dac runSynth:";
     qDebug() << "Starting RtAudio Stream...\n";
     dac->startStream();
 
@@ -175,8 +158,6 @@ void OrganSynth::runSynth()
     std::vector<unsigned char> message;
     int nBytes, i;
     double stamp;
-
-    int noteStack = 0;
 
     const int poly = 16;
     OrganFlue* fluePipes[poly];
@@ -198,16 +179,11 @@ void OrganSynth::runSynth()
         rank_active[i] = false;
     }
 
-
-
-
-
     while (running)
     {
         QApplication::processEvents();
 
         try {
-
             //read MIDI in
             if (midi_in)
             {
@@ -226,7 +202,6 @@ void OrganSynth::runSynth()
                     int note = message[1];
                     if ((message[0]>>4 == 9)) //note on
                     {
-                        noteStack++;
                         testFreq = 440.0 * pow(2.0, (note-69)/12.0);
 
                         if (rank_active[0])
@@ -273,8 +248,6 @@ void OrganSynth::runSynth()
                         toggleStop(prg);
                     }
                 }
-
-
             }
 
         }
@@ -294,27 +267,19 @@ void OrganSynth::runSynth()
 
         rank2.removeInstrument(clarPipes[i]);
         delete clarPipes[i];
+
+        rank3.removeInstrument(saxPipes[i]);
+        delete saxPipes[i];
     }
-
-
 
     dac->stopStream();
     dac->closeStream();
-    qDebug() << " run stopped\n";
-    if (sine_test)
-        delete sine_test;
-
-    for (int i=0; i<NUM_SINES; i++)
-    {
-        delete sines[i];
-        sines[i] = NULL;
-    }
-
+    qDebug() << "   runSynth dac routine stopped\n";
 }
 
 void OrganSynth::toggleSound()
 {
-    isSine = !isSine;
+
 }
 
 void OrganSynth::toggleStop(int rank_number)
@@ -322,4 +287,14 @@ void OrganSynth::toggleStop(int rank_number)
     rank_active[rank_number] = !rank_active[rank_number];
     //qDebug() <<"orgSynth: rank " <<rank_number<<" active = " << rank_active[rank_number];
     emit sendStopSig(rank_number, rank_active[rank_number]);
+}
+
+QStringList OrganSynth::getMidiPorts()
+{
+    QStringList list;
+    for (int i=0; i<midi_in->getPortCount(); i++)
+    {
+        list.append(midi_in->getPortName(i).c_str());
+    }
+    return list;
 }

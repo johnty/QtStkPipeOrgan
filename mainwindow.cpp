@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     synth_thread = NULL;
     ui->setupUi(this);
 
+    initDacThread();
+
     ui->checkBoxRank0->setEnabled(false);
     ui->checkBoxRank1->setEnabled(false);
     ui->checkBoxRank2->setEnabled(false);
@@ -39,52 +41,6 @@ void MainWindow::on_pushButtonSine_clicked()
     return;
 }
 
-void MainWindow::on_pushButtonStart_clicked()
-{
-    if (my_organsynth) //stop if running
-        stopDacProc();
-
-    if (synth_thread)
-        delete synth_thread;
-    synth_thread = 0;
-    synth_thread = new QThread;
-
-    if (my_organsynth) //TODO get rid of this
-    {
-        delete my_organsynth;
-        my_organsynth = 0;
-    }
-
-
-
-    int port_index = ui->comboBoxMidiIn->currentIndex();
-    if (port_index < 0) //in case something weird happened...
-        port_index = 0;
-    my_organsynth = new OrganSynth(0, port_index);
-    my_organsynth->moveToThread(synth_thread);
-
-    //connect slots
-
-    //connect(my_dac, SIGNAL(testFromDac()), this, SLOT(fromDac()));
-
-    connect(synth_thread, SIGNAL(started()), my_organsynth, SLOT(runSynth()));
-
-    //NOTE: the thread cannot finish until the worker is done,
-    // so this call below is useless!!
-    connect(synth_thread, SIGNAL(finished()), my_organsynth, SLOT(stopSynth()));
-    connect(this, SIGNAL(toDac(int)), my_organsynth, SLOT(stopSynth()));
-    //connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
-    connect(my_organsynth, SIGNAL(sendStopSig(int,bool)), this, SLOT(on_StopToggled(int,bool)));
-
-    synth_thread->start();
-}
-
-void MainWindow::on_pushButtonStop_clicked()
-{
-    stopDacProc();
-
-}
-
 void MainWindow::stopDacProc()
 {
     if (my_organsynth)
@@ -103,16 +59,19 @@ void MainWindow::refreshMidi()
     int prevIndex = ui->comboBoxMidiIn->currentIndex();
     qDebug()<<"prevIndex = " << prevIndex;
     ui->comboBoxMidiIn->clear();
-    RtMidiIn midiin;
-    for (int i=0; i<midiin.getPortCount(); i++)
-    {
-        ui->comboBoxMidiIn->addItem(midiin.getPortName(i).c_str());
-    }
-    if (midiin.getPortCount()==0)
-        ui->comboBoxMidiIn->addItem("N/A");
 
-    if (prevIndex != -1) //restore previous selection, if it exists
-        ui->comboBoxMidiIn->setCurrentIndex(prevIndex);
+    QStringList list = my_organsynth->getMidiPorts();
+    if (list.isEmpty())
+        ui->comboBoxMidiIn->setDisabled(true);
+    else {
+        for (QStringList::iterator it = list.begin(); it != list.end(); ++it)
+        {
+            ui->comboBoxMidiIn->addItem(*it);
+        }
+
+        if (prevIndex != -1) //restore previous selection, if it exists
+            ui->comboBoxMidiIn->setCurrentIndex(prevIndex);
+    }
 }
 
 void MainWindow::on_pushButtonRefreshMidi_clicked()
@@ -139,4 +98,56 @@ void MainWindow::on_StopToggled(int stop, bool active)
     default:
         break;
     }
+}
+
+void MainWindow::initDacThread()
+{
+    if (my_organsynth) //stop if running
+        stopDacProc();
+
+    if (synth_thread)
+        delete synth_thread;
+    synth_thread = 0;
+    synth_thread = new QThread;
+
+    if (my_organsynth) //TODO get rid of this
+    {
+        delete my_organsynth;
+        my_organsynth = 0;
+    }
+
+    int port_index = ui->comboBoxMidiIn->currentIndex();
+    if (port_index < 0) //in case something weird happened...
+        port_index = 0;
+    my_organsynth = new OrganSynth(0);
+    my_organsynth->moveToThread(synth_thread);
+
+
+    //connect slots
+
+    //connect(my_dac, SIGNAL(testFromDac()), this, SLOT(fromDac()));
+
+    //this launches the runSynth routine when thread is started
+    connect(synth_thread, SIGNAL(started()), my_organsynth, SLOT(runSynth()));
+
+    //NOTE: the thread cannot finish until the worker is done,
+    // so this call below is useless!!
+    connect(synth_thread, SIGNAL(finished()), my_organsynth, SLOT(stopSynth()));
+    //connect(this, SIGNAL(toDac(int)), my_organsynth, SLOT(stopSynth()));
+    //connect(this, SIGNAL(toDac(int)), my_dac, SLOT(toggleSine()));
+
+    //from synth->UI, for stop toggle display
+    connect(my_organsynth, SIGNAL(sendStopSig(int,bool)), this, SLOT(on_StopToggled(int,bool)));
+
+    //port changing signal/slot
+
+    connect(this, SIGNAL(ChangePort(int)), my_organsynth, SLOT(selectMidiPort(int)));
+
+    synth_thread->start();
+}
+
+void MainWindow::on_comboBoxMidiIn_currentIndexChanged(int index)
+{
+    qDebug()<<"changing port to " << index;
+    emit ChangePort(index);
 }

@@ -28,16 +28,19 @@ class OrganSynth : public QObject
 {
     Q_OBJECT
 public:
-    explicit OrganSynth(QObject *parent = 0, int midi_in_idx = 0);
+    explicit OrganSynth(QObject *parent = 0);
     ~OrganSynth();
     void run();
     void stopDac() { running = false; }
+    QStringList getMidiPorts();
 
 signals:
     void sendStopSig(int stop, bool active);
 
 public slots:
     void runSynth();
+    void initMidi();
+    int selectMidiPort(int port);
     void stopSynth() {
         qDebug() << "stop called\n";
         running = false;
