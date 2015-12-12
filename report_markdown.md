@@ -131,7 +131,9 @@ QT Application: cross platform C++ development environment
 * MIDI interface for reading input from external controller
 * Synthesis module for producing sound, managing voices
 	* STK Voicer class for managing polyphony
+	* Updated every RtAudio tick() and fills output buffer
 	* STK Instruments for each type of "pipe"
+	
 
 ![test ](img/system.png)
 
@@ -167,7 +169,6 @@ Or, if we're looking at reed pipes:
 
 ###Demonstration
 
-![broken](https://davidcmoisan.files.wordpress.com/2011/09/clippy-bluescreen-copy_thumb.png?w=662&h=529)
 
 ###Further Development
 
